@@ -1,0 +1,8 @@
+###########################
+# Sample local zshrc file #
+###########################
+
+
+export ZSH_REPO=$HOME/Projects/config_scripts/zsh
+
+source $ZSH_REPO/zshrc
