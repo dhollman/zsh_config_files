@@ -25,11 +25,7 @@ it would be silly to exclude
 *  .zsh/hash_directories.zsh
 *  .zsh/oh-my-zsh-plugins.zsh
 *  .zsh/working_environments directory:
-    
-    Anything in this directory or its subdirectories will be made into an alias (with .zsh omitted) that sources that file.  For instance, 
-    the presence of .zsh/working_environments/work_rb.zsh would alias work_rb to source .zsh/working_environments/work_rb.zsh.
-    Also, any subdirectory can have .before.zsh and .after.zsh scripts that are run before and after the content of any of the alias files
-    in that directory when that alias is called.
+   Anything in this directory or its subdirectories will be made into an alias (with .zsh omitted) that sources that file.  For instance, the presence of .zsh/working_environments/work_rb.zsh would alias work_rb to source .zsh/working_environments/work_rb.zsh.  Also, any subdirectory can have .before.zsh and .after.zsh scripts that are run before and after the content of any of the alias files in that directory when that alias is called.
 
 Machine-specific environment variables
 --------------------------------------
