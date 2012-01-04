@@ -267,6 +267,7 @@ alias sorc="source /etc/csh.cshrc && source /etc/csh.login && source ~/.zshrc"
 alias info='info $1 | less'
 alias aliascd='aliasadd -p "cd Aliases" $1 cd `pwd`'
 alias c="clear"
+alias mmv='noglob zmv -W"
 alias gpush='git commit -a -m "`date` quick push using the gpush alias.  (Probably means I have not done anything worth talking about since the last commit, but I need to push quickly; or, it could just be laziness)" && git push'
 
 # The rest of the aliases go in these files...
