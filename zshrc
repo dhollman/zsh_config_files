@@ -106,13 +106,15 @@ fi
 #vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
 #   Oh-my-zsh {{{1
 #-----------------------------------------------------------------------------------
-export ZSH=$ZSH_REPO/oh-my-zsh
-if [ -e ~/.zsh/oh-my-zsh-plugins.zsh ]; then
-    source ~/.zsh/oh-my-zsh-plugins.zsh
+if [[ ! -n "${NO_OH_MY_ZSH}" ]] then
+    export ZSH=$ZSH_REPO/oh-my-zsh
+    if [ -e ~/.zsh/oh-my-zsh-plugins.zsh ]; then
+        source ~/.zsh/oh-my-zsh-plugins.zsh
+    fi
+    ZSH_THEME="bira"
+    export COMPLETION_WAITING_DOTS="true"
+    source $ZSH/oh-my-zsh.sh
 fi
-ZSH_THEME="bira"
-export COMPLETION_WAITING_DOTS="true"
-source $ZSH/oh-my-zsh.sh
 
 #--Undo/change things I don't like about oh-my-zsh--{{{2
 unalias ..
