@@ -174,7 +174,6 @@ pullp() {
     current_dir=`pwd`
     cd $ZSH_REPO
     git pull
-    sop
     cd $current_dir
 }
 alias pullrc=pullp
