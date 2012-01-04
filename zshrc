@@ -346,6 +346,8 @@ if [ -f /opt/local/etc/profile.d/autojump.sh ]; then
     . /opt/local/etc/profile.d/autojump.sh
 fi
 # zsh syntax highlighting:
-source $ZSH_REPO/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+if [[ ENABLE_ZSH_HIGHLIGHTING != false ]]; then
+    source $ZSH_REPO/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+fi
 #}}}1
 #^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^

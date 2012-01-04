@@ -37,5 +37,6 @@ Machine-specific environment variables
 --------------------------------------
 * $ZSH_REPO must be set to the directory of the zsh config scripts repository (i. e. the directory that this file is in)
 * $NO_OH_MY_ZSH can be set to anything to prevent oh-my-zsh from loading.  (use `unset` to unset it) 
+* $ENABLE_ZSH_HIGHLIGHTING can be set to false to turn off syntax highlighting (it is true by default)
 
 
