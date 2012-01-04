@@ -160,8 +160,7 @@ pushp() {
     cd $ZSH_REPO
     git add .
     if [[ $*[$#] = 0 ]]; then
-        # use the gpush alias
-        gpush
+        git commit
     elif [[ $*[$#] = 1 ]]; then
         git commit -m "$1"
     else
