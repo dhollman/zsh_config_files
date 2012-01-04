@@ -153,6 +153,39 @@ function vivspp() { vim $3 "+vsp $2" "+vsp $1" }
 function vivsppp() { vim $4 "+vsp $3" "+vsp $2" "+vsp $1" }
 #-----------------------------------------}}}2#
 
+
+# Push changes to zshrc and such
+pushp() {
+    current_dir=`pwd`
+    cd $ZSH_REPO
+    git add .
+    if [[ $*[$#] = 0 ]]; then
+        # use the gpush alias
+        gpush
+    elif [[ $*[$#] = 1 ]]; then
+        git commit -m "$1"
+    else
+        # assume they are git commit arguments
+        git commit $*
+    fi
+    git push
+    cd $current_dir
+}
+alias pushrc=pushp
+
+    
+pullp() {
+    current_dir=`pwd`
+    cd $ZSH_REPO
+    git pull
+    sop
+    cd $current_dir
+}
+alias pullrc=pullp
+
+#TODO syncp
+
+
 #}}}1
 #^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
