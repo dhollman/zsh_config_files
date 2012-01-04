@@ -347,7 +347,22 @@ if [ -f /opt/local/etc/profile.d/autojump.sh ]; then
 fi
 # zsh syntax highlighting:
 if [[ ENABLE_ZSH_HIGHLIGHTING != false ]]; then
+    ZSH_HIGHLIGHT_HIGHLIGHTERS=(main brackets)
     source $ZSH_REPO/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+    # All of this stuff has to go AFTER the above statement...
+    # ZSH highlight styles
+    ZSH_HIGHLIGHT_STYLES[globbing]='fg=magenta'
+    ZSH_HIGHLIGHT_STYLES[history-expansion]='fg=magenta,bold'
+    ZSH_HIGHLIGHT_STYLES[alias]='fg=green'
+    ZSH_HIGHLIGHT_STYLES[builtin]='fg=green'
+    ZSH_HIGHLIGHT_STYLES[function]='fg=green'
+    ZSH_HIGHLIGHT_STYLES[command]='fg=green'
+    ZSH_HIGHLIGHT_STYLES[precommand]='fg=yellow,underline'
+    ZSH_HIGHLIGHT_STYLES[bracket-error]='fg=white,bold,bg=red'
+    ZSH_HIGHLIGHT_STYLES[cursor-matchingbracket]='bold,bg=white'
+    ZSH_HIGHLIGHT_STYLES[assign]='fg=yellow,bold'
+    ZSH_HIGHLIGHT_STYLES[commandseparator]='fg=yellow,bold'
+    #
 fi
 #}}}1
 #^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
