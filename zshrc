@@ -104,15 +104,23 @@ fi
 
 
 #vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
-#   Oh-my-zsh (currently enabled)   {{{1
+#   Oh-my-zsh {{{1
 #-----------------------------------------------------------------------------------
 export ZSH=$ZSH_REPO/oh-my-zsh
-
+if [ -e ~/.zsh/oh-my-zsh-plugins.zsh ]; then
+    source ~/.zsh/oh-my-zsh-plugins.zsh
+fi
 ZSH_THEME="bira"
 export COMPLETION_WAITING_DOTS="true"
-## Example format: plugins=(rails git textmate ruby lighthouse)
-plugins=( autojump git gem macports osx )
 source $ZSH/oh-my-zsh.sh
+
+#--Undo/change things I don't like about oh-my-zsh--{{{2
+unalias ..
+export GREP_COLOR='1;36'
+unsetopt auto_cd
+bindkey '\e.' insert-last-word
+#---------------------------------------------------}}}2
+
 #}}}1
 #^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
@@ -131,6 +139,17 @@ run-fg-editor() {
     zle accept-line
 }
 zle -N run-fg-editor
+
+
+#--Opening files quickly with vim---------{{{2#
+function viw() { vi `which $1` }
+function visp() { vim $2 "+sp $1" }
+function vispp() { vim $3 "+sp $2" "+sp $1" }
+function visppp() { vim $4 "+sp $3" "+sp $2" "+sp $1" }
+function vivsp() { vim $2 "+vsp $1" }
+function vivspp() { vim $3 "+vsp $2" "+vsp $1" }
+function vivsppp() { vim $4 "+vsp $3" "+vsp $2" "+vsp $1" }
+#-----------------------------------------}}}2#
 
 #}}}1
 #^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -234,15 +253,8 @@ alias virc="vi $ZSH_REPO/zshrc && source ~/.zshrc && echo 'Sourcing ~/.zshrc' "
 alias vio='vi output.dat'
 alias vii='vi input.dat'
 alias viv='vi ~/.vimrc'
-alias viw='vi `which $1`'
 alias vimro="vim -R"
 alias vs='vim -S *.vimsession'
-alias visp='vim $2 "+sp $1"'
-alias vispp='vim $3 "+sp $2" "+sp $1"'
-alias visppp='vim $4 "+sp $3" "+sp $2" "+sp $1"'
-alias vivsp='vim $2 "+vsp $1"'
-alias vivspp='vim $3 "+vsp $2" "+vsp $1"'
-alias vivsppp='vim $4 "+vsp $3" "+vsp $2" "+vsp $1"'
 #-----------------------------------------}}}2#
 
 alias tfo='tail -n 1000 -f output.dat'
@@ -260,8 +272,21 @@ if [ -e $HOME/.zsh/aliases.zsh ]; then
     source $HOME/.zsh/aliases.zsh
 fi
 
-if [ -e $HOME/.zsh/working_environments.zsh ]; then
-    source $HOME/.zsh/working_environments.zsh
+if [ -d $HOME/.zsh/working_environments ]; then
+    for f in $HOME/.zsh/working_environments/**/*; do
+        directory=`dirname $f`
+        if [ -e $directory/.before.zsh ]; then
+            if [ -e $directory/.after.zsh ]; then
+                alias `basename $f .zsh`="source $directory/.before.zsh; source $f; source $directory/.after.zsh; "
+            else
+                alias `basename $f .zsh`="source $directory/.before.zsh; source $f"
+            fi
+        elif [ -e $directory/.after.zsh ]; then
+            alias `basename $f .zsh`="source $f; source $directory/.after.zsh; "
+        else
+            alias `basename $f .zsh`="source $f"
+        fi
+    done
 fi
 #}}}1
 #^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
