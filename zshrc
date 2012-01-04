@@ -153,6 +153,35 @@ function vivspp() { vim $3 "+vsp $2" "+vsp $1" }
 function vivsppp() { vim $4 "+vsp $3" "+vsp $2" "+vsp $1" }
 #-----------------------------------------}}}2#
 
+
+# Push changes to zshrc and such
+pushp() {
+    current_dir=`pwd`
+    cd $ZSH_REPO
+    git add .
+    if [[ $*[$#] = 0 ]]; then
+        git commit
+    else
+        git commit -m "$*"
+    fi
+    git push
+    cd $current_dir
+}
+alias pushrc=pushp
+
+    
+pullp() {
+    current_dir=`pwd`
+    cd $ZSH_REPO
+    git pull
+    sop
+    cd $current_dir
+}
+alias pullrc=pullp
+
+#TODO syncp
+
+
 #}}}1
 #^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
@@ -269,6 +298,7 @@ alias aliascd='aliasadd -p "cd Aliases" $1 cd `pwd`'
 alias c="clear"
 alias mmv='noglob zmv -W"
 alias gpush='git commit -a -m "`date` quick push using the gpush alias.  (Probably means I have not done anything worth talking about since the last commit, but I need to push quickly; or, it could just be laziness)" && git push'
+alias gpushp='pushp "`date` quick push using the gpush alias.  (Probably means I have not done anything worth talking about since the last commit, but I need to push quickly; or, it could just be laziness)"'
 
 # The rest of the aliases go in these files...
 
