@@ -164,6 +164,7 @@ pushp() {
     else
         git commit -m "$*"
     fi
+    git pull # Pull in remote changes before pushing
     git push
     cd $current_dir
 }
