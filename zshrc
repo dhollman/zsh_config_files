@@ -339,9 +339,12 @@ fi
 #  Stuff that claims it needs to be at the end  {{{1
 #-----------------------------------------------------------------------------------
 # Enable autojump
+# TODO put this in some local file since it contains a non-relative path
 export FPATH="$FPATH:/opt/local/share/zsh/site-functions/"
 if [ -f /opt/local/etc/profile.d/autojump.sh ]; then
     . /opt/local/etc/profile.d/autojump.sh
 fi
+# zsh syntax highlighting:
+source $ZSH_REPO/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 #}}}1
 #^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
