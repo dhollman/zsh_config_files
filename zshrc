@@ -216,14 +216,30 @@ setopt always_to_end
 #autoload -U compinit
 #compinit
 
+# Undo menuselect actions
+bindkey -M menuselect '^[' undo
+
 # Use a cache
 zstyle ':completion:*' use-cache on
 zstyle ':completion:*' cache-path ~/.zsh/cache
 
 # Add colors to completion
 export ZLSCOLORS="${LS_COLORS}"
+zstyle ':completion:*' completer _complete _list _expand
 zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS}
 zstyle ':completion:*:*:kill:*:processes' list-colors '=(#b) #([0-9]#)*=0=01;31' 
+
+if [ "x$COMPLETION_WAITING_DOTS" = "xtrue" ]; then
+  complete-word-with-dots() {
+    echo -n "\e[31m......\e[0m"
+    zle complete-word
+    zle redisplay
+  }
+  zle -N complete-word-with-dots
+  bindkey "^I" complete-word-with-dots
+fi
+
+
 
 # no binary files for vi
 local binary_exts='*.(o|lo|gcno|gcda|a|so|aux|dvi|log|swp|fig|bbl|blg|bst|idx|ind|out|toc|class|pdf|ps|pyc)'
@@ -254,14 +270,13 @@ zstyle ':completion:*:complete:*' matcher-list 'm:{a-z}={A-Z} m:[-._]=[-._]'
 
 #zmodload -a colors
 #zmodload -a autocomplete
-# Equivalent of tcsh "set complete=enhance"
 # Group matches and Describe
-#zstyle ':completion:*:matches' group 'yes'
-#zstyle ':completion:*:options' description 'yes'
-#zstyle ':completion:*:options' auto-description '%d'
-#zstyle ':completion:*:descriptions' format $'\e[01;33m -- %d --\e[0m'
-#zstyle ':completion:*:messages' format $'\e[01;35m -- %d --\e[0m'
-#zstyle ':completion:*:warnings' format $'\e[01;31m -- No Matches Found --\e[0m'
+zstyle ':completion:*:matches' group 'yes'
+zstyle ':completion:*:options' description 'yes'
+zstyle ':completion:*:options' auto-description '%d'
+zstyle ':completion:*:descriptions' format $'\e[01;33m -- %d --\e[0m'
+zstyle ':completion:*:messages' format $'\e[01;35m -- %d --\e[0m'
+zstyle ':completion:*:warnings' format $'\e[01;31m -- No Matches Found --\e[0m'
 #zstyle ':completion:*:*:kill:*' menu yes select
 #zstyle ':completion:*:processes' command 'ps -au$USER'
 #zstyle ':completion:*:default' list-colors yes
@@ -347,7 +362,7 @@ if [ -f /opt/local/etc/profile.d/autojump.sh ]; then
 fi
 # zsh syntax highlighting:
 if [[ ENABLE_ZSH_HIGHLIGHTING != false ]]; then
-    ZSH_HIGHLIGHT_HIGHLIGHTERS=(main brackets)
+    ZSH_HIGHLIGHT_HIGHLIGHTERS=(main)
     source $ZSH_REPO/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
     # All of this stuff has to go AFTER the above statement...
     # ZSH highlight styles
