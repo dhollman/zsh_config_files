@@ -65,10 +65,14 @@ SAVEHIST=10000
 #-----------------------------------------}}}2#
 
 # Stay compatible to sh and IFS
-setopt sh_word_split
-#
+setopt SH_WORD_SPLIT
+
 # csh-like redirection
-setopt clobber
+setopt CLOBBER
+
+# If a pattern for filename generation has no matches, delete the pattern from the argument list; do not report an error unless all the patterns in a
+# command have no matches.  Overrides NOMATCH.
+setopt CSH_NULL_GLOB
 
 #--Pretty colors --------------------------{{{2#
 autoload colors; colors;
