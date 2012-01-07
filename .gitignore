@@ -2,3 +2,4 @@
 oh-my-zsh/custom/example.zsh
 oh-my-zsh/custom/example
 *.zwc
+*.zwc.old

@@ -45,18 +45,30 @@ fi
 #--Compile stuff------------------------{{{2#
 autoload -U zrecompile
 zrecompile -p $ZSH_REPO/zshrc
+if [[ -f $ZSH_REPO/zshrc.zwc.old ]]; then
+    rm -f $ZSH_REPO/zshrc.zwc.old
+fi
 setopt NULL_GLOB
 if [[ -d $ZSH_LOCAL/functions ]]; then
     for file in $ZSH_LOCAL/functions/*; do
         zrecompile -p $file
+        if [[ -f $file.zwc.old ]]; then
+            rm -f $file.zwc.old
+        fi
     done
 fi
 if [[ -d $ZSH_LOCAL ]]; then
     for file in $ZSH_LOCAL/**/*.zsh; do
         zrecompile -p $file
+        if [[ -f $file.zwc.old ]]; then
+            rm -f $file.zwc.old
+        fi
     done;
 fi
 zrecompile -p $HOME/.zshrc
+if [[ -f $HOME/.zshrc.zwc.old ]]; then
+    rm -f $HOME/.zshrc.zwc.old
+fi
 unsetopt NULL_GLOB
 #---------------------------------------}}}2#
 
