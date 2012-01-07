@@ -1,4 +1,4 @@
 !oh-my-zsh/custom/*
 oh-my-zsh/custom/example.zsh
 oh-my-zsh/custom/example
-
+*.zwc

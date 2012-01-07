@@ -25,10 +25,6 @@
 #-----------------------------------------------------------------------------------
 
 
-#--Compile stuff------------------------{{{2#
-autoload -U zrecompile
-zrecompile $ZSH_REPO/zshrc
-#---------------------------------------}}}2#
 
 #--Functions to be used later in this file------{{{2#
 # Create a quick function for sourcing stuff only if it exists 
@@ -44,6 +40,25 @@ source_if_exists() {
 if ((! $+ZSH_LOCAL)); then
     ZSH_LOCAL=$HOME/.zsh
 fi
+
+
+#--Compile stuff------------------------{{{2#
+autoload -U zrecompile
+zrecompile -p $ZSH_REPO/zshrc
+setopt NULL_GLOB
+if [[ -d $ZSH_LOCAL/functions ]]; then
+    for file in $ZSH_LOCAL/functions/*; do
+        zrecompile -p $file
+    done
+fi
+if [[ -d $ZSH_LOCAL ]]; then
+    for file in $ZSH_LOCAL/**/*.zsh; do
+        zrecompile -p $file
+    done;
+fi
+zrecompile -p $HOME/.zshrc
+unsetopt NULL_GLOB
+#---------------------------------------}}}2#
 
 #}}}1
 #^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
