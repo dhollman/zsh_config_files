@@ -23,8 +23,28 @@
 #vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
 #   Stuff that should be at the beginning of the zsh file   {{{1
 #-----------------------------------------------------------------------------------
+
+
+#--Compile stuff------------------------{{{2#
 autoload -U zrecompile
-zrecompile $HOME/.zshrc
+zrecompile $ZSH_REPO/zshrc
+#---------------------------------------}}}2#
+
+#--Functions to be used later in this file------{{{2#
+# Create a quick function for sourcing stuff only if it exists 
+source_if_exists() {
+    if [[ -e $1 ]]; then
+        source $1
+    fi
+}
+#-----------------------------------------------}}}2#
+    
+
+# Check if the ZSH_LOCAL variable is set.  If not, set it to $HOME/.zsh
+if ((! $+ZSH_LOCAL)); then
+    ZSH_LOCAL=$HOME/.zsh
+fi
+
 #}}}1
 #^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
@@ -32,13 +52,22 @@ zrecompile $HOME/.zshrc
 #vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
 #   Path variables   {{{1
 #-----------------------------------------------------------------------------------
-if [[ -e $HOME/.zsh/paths/path.zsh ]] {
-    source $HOME/.zsh/paths/path.zsh
-}
 
-#--fpath variable--------------------------{{{2#
-fpath=($HOME/.zsh/functions $fpath)
-#------------------------------------------}}}2#
+# path
+source_if_exists $ZSH_LOCAL/paths/path.zsh
+
+# fpath
+source_if_exists $ZSH_LOCAL/paths/fpath.zsh
+
+#--machine independent fpath variable-------------{{{2#
+if [[ -d $ZSH_LOCAL/functions ]]; then
+    fpath=($ZSH_LOCAL/functions $fpath)
+fi
+#-------------------------------------------------}}}2#
+
+# Make sure we don't add too many things to the path arrays that we're adding stuff to
+typeset -U path
+typeset -U fpath
 
 #}}}1
 #^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -100,9 +129,7 @@ autoload -U zmv
 #vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
 #   Environment variables that don't belong elsewhere  {{{1
 #-----------------------------------------------------------------------------------
-if [ -e $HOME/.zsh/environment.zsh ]; then
-    source $HOME/.zsh/environment.zsh
-fi
+source_if_exists $ZSH_LOCAL/environment.zsh
 #}}}1
 #^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
@@ -110,7 +137,7 @@ fi
 #vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
 #   Oh-my-zsh {{{1
 #-----------------------------------------------------------------------------------
-if [[ ! -n "${NO_OH_MY_ZSH}" ]] then
+if (( ! $+NO_OH_MY_ZSH )); then
     export ZSH=$ZSH_REPO/oh-my-zsh
     if [ -e ~/.zsh/oh-my-zsh-plugins.zsh ]; then
         source ~/.zsh/oh-my-zsh-plugins.zsh
@@ -163,7 +190,7 @@ pushp() {
     current_dir=`pwd`
     cd $ZSH_REPO
     git add .
-    if [[ $*[$#] = 0 ]]; then
+    if [[ ${#ARGV} == 0 ]]; then
         git commit
     else
         git commit -m "$*"
@@ -229,7 +256,7 @@ zstyle ':completion:*' cache-path ~/.zsh/cache
 
 # Add colors to completion
 export ZLSCOLORS="${LS_COLORS}"
-zstyle ':completion:*' completer _complete _list _expand
+zstyle ':completion:*' completer _complete _list _approximate _list _expand
 zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS}
 zstyle ':completion:*:*:kill:*:processes' list-colors '=(#b) #([0-9]#)*=0=01;31' 
 
@@ -348,9 +375,7 @@ fi
 #vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
 #   Hash directories   {{{1
 #-----------------------------------------------------------------------------------
-if [ -e $HOME/.zsh/hash_directories.zsh ]; then
-    source $HOME/.zsh/hash_directories.zsh
-fi
+source_if_exists $ZSH_LOCAL/hash_directories.zsh
 #}}}1
 #^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
@@ -358,11 +383,8 @@ fi
 #vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
 #  Stuff that claims it needs to be at the end  {{{1
 #-----------------------------------------------------------------------------------
-# Enable autojump
-# TODO put this in some local file since it contains a non-relative path
-export FPATH="$FPATH:/opt/local/share/zsh/site-functions/"
-if [ -f /opt/local/etc/profile.d/autojump.sh ]; then
-    . /opt/local/etc/profile.d/autojump.sh
+if [ -e $HOME/.zsh/source_last.zsh ]; then
+    source $HOME/.zsh/source_last.zsh
 fi
 # zsh syntax highlighting:
 if [[ ENABLE_ZSH_HIGHLIGHTING != false ]]; then
@@ -383,5 +405,10 @@ if [[ ENABLE_ZSH_HIGHLIGHTING != false ]]; then
     ZSH_HIGHLIGHT_STYLES[commandseparator]='fg=yellow,bold'
     #
 fi
+
+# make sure we don't add too many things to arrays that we're adding stuff to
+typeset -U fpath
+typeset -U path
+
 #}}}1
 #^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^

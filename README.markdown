@@ -20,6 +20,7 @@ it would be silly to exclude
 
 *  .zsh/paths directory:
      * .zsh/paths/path.zsh
+     * .zsh/paths/fpath.zsh
 *  .zsh/aliases.zsh
 *  .zsh/environment.zsh
 *  .zsh/hash_directories.zsh
@@ -32,10 +33,13 @@ it would be silly to exclude
      * Any subdirectory of this directory can have .before.zsh and .after.zsh 
        scripts that are run before and after the content of any of the alias 
        files in that directory when that alias is called.
+*  .zsh/source_last.zsh
+*  Check the sample_zsh_local_dir for example structure
 
 Machine-specific environment variables
 --------------------------------------
 * $ZSH_REPO must be set to the directory of the zsh config scripts repository (i. e. the directory that this file is in)
+* $ZSH_LOCAL can be set to use something other than $HOME/.zsh for the machine-specific files directory
 * $NO_OH_MY_ZSH can be set to anything to prevent oh-my-zsh from loading.  (use `unset` to unset it) 
 * $ENABLE_ZSH_HIGHLIGHTING can be set to false to turn off syntax highlighting (it is true by default)
 
