@@ -50,10 +50,12 @@ if [[ -f $ZSH_REPO/zshrc.zwc.old ]]; then
 fi
 setopt NULL_GLOB
 if [[ -d $ZSH_LOCAL/functions ]]; then
-    for file in $ZSH_LOCAL/functions/*; do
-        zrecompile -p $file
-        if [[ -f $file.zwc.old ]]; then
-            rm -f $file.zwc.old
+    for file in $ZSH_LOCAL/functions/**/*; do
+        if [[ -f $file ]]; then
+            zrecompile -p $file
+            if [[ -f $file.zwc.old ]]; then
+                rm -f $file.zwc.old
+            fi
         fi
     done
 fi
@@ -179,6 +181,7 @@ unalias ..
 export GREP_COLOR='1;36'
 unsetopt auto_cd
 bindkey '\e.' insert-last-word
+zstyle '*' single-ignored no
 #---------------------------------------------------}}}2
 
 #}}}1
@@ -188,6 +191,9 @@ bindkey '\e.' insert-last-word
 #vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
 #   Functions   {{{1
 #-----------------------------------------------------------------------------------
+
+source_if_exists $ZSH_LOCAL/autoload_functions.zsh
+
 div() { 
     for i in {1..$1}; print "$fg_bold[cyan]${(l.((${COLUMNS}))..─.)}$reset_color" 
 }
@@ -270,9 +276,11 @@ setopt always_to_end
 
 # General completion system configuration
 # Don't do this if using oh-my-zsh
-#zmodload zsh/complist
-#autoload -U compinit
-#compinit
+if (( $+NO_OH_MY_ZSH )); then
+    zmodload zsh/complist
+    autoload -U compinit
+    compinit
+fi
 
 # Undo menuselect actions
 bindkey -M menuselect '^[' undo
@@ -299,7 +307,7 @@ fi
 
 
 
-# no binary files for vi
+# No binary files for vi and friends
 local binary_exts='*.(o|lo|gcno|gcda|a|so|aux|dvi|log|swp|fig|bbl|blg|bst|idx|ind|out|toc|class|pdf|ps|pyc)'
 zstyle ':completion:*:*:vi:*:all-files' ignored-patterns $binary_exts
 zstyle ':completion:*:*:vim:*:all-files' ignored-patterns $binary_exts
@@ -308,18 +316,28 @@ zstyle ':completion:*:*:less:*' ignored-patterns $binary_exts
 zstyle ':completion:*:*:zless:*' ignored-patterns $binary_exts
 
 # Hosts completion
-# Already done by oh-my-zsh
-#if [ -f ~/.ssh/known_hosts ]; then
-#    hosts=(`awk '{print $1}' ~/.ssh/known_hosts | tr ',' '\n' `)
-#fi
-#if [ -f ~/.ssh/config ]; then
-#    hosts=($hosts `grep ^Host ~/.ssh/config | sed s/Host\ // | egrep -v '^\*$'`)
-#fi
-#if [ -f /var/lib/misc/ssh_known_hosts ]; then
-#    hosts=($hosts `awk -F "[, ]" '{print $1}' /var/lib/misc/ssh_known_hosts | sort -u`)
-#fi
-#if [ "$hosts" ]; then
-#    zstyle ':completion:*:hosts' hosts $hosts
+# oh-my-zsh does an abismal job of this, so fix it
+myhosts=()
+if [ -r /etc/ssh/ssh_known_hosts ]; then
+    myhosts=($myhosts `awk '{print $1}' /etc/ssh/ssh_known_hosts | sed -e 's/,.*::.*:.*:.*:.*$//' -e 's/ssh-rsa//' | tr ',' '\n'`)
+fi
+if [ -r /var/lib/misc/ssh_known_hosts ]; then
+    myhosts=($myhosts `awk '{print $1}' /var/lib/misc/ssh_known_hosts | sed -e 's/,.*::.*:.*:.*:.*$//' -e 's/ssh-rsa//' | tr ',' '\n'`)
+fi
+if [ -r $HOME/.ssh/known_hosts ]; then
+    myhosts=($myhosts `awk '{print $1}' ~/.ssh/known_hosts | sed -e 's/,.*::.*:.*:.*:.*$//' -e 's/ssh-rsa//' | tr ',' '\n'`)
+fi
+if [ "$myhosts" ]; then
+    typeset -U myhosts
+    zstyle ':completion:*:hosts' hosts $myhosts
+fi
+
+# Get host-aliases from $HOME/.ssh/config
+# These should already be in the known_hosts file somewhere...
+#if [ -r $HOME/.ssh/config ]; then
+#    hostfake=(`grep "^Host " $HOME/.ssh/config | sed 's/Host\ \(.*\)/\1:ssh-host-aliases/' | egrep -v '^\*$'`)
+#    # As far as I know, only ssh and scp can use .ssh/config host-aliases
+#    zstyle ':completion::complete:ssh:*:hosts' fake "$hostfake[@]"
 #fi
 
 # My own preference when it comes to the tcsh "complete=enhance" analog
@@ -402,6 +420,10 @@ fi
 #vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
 #   Hash directories   {{{1
 #-----------------------------------------------------------------------------------
+hash -d ZSH_LOCAL="$ZSH_LOCAL"
+if [[ -d $ZSH_LOCAL/functions ]]; then
+    hash -d ZSH_FUNCTIONS="$ZSH_LOCAL/functions"
+fi
 source_if_exists $ZSH_LOCAL/hash_directories.zsh
 #}}}1
 #^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
