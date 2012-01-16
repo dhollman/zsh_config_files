@@ -441,7 +441,7 @@ if [ -e $HOME/.zsh/source_last.zsh ]; then
     source $HOME/.zsh/source_last.zsh
 fi
 # zsh syntax highlighting:
-if [[ ENABLE_ZSH_HIGHLIGHTING != false ]]; then
+if ((! $+DISABLE_ZSH_HIGHLIGHTING)); then
     ZSH_HIGHLIGHT_HIGHLIGHTERS=(main)
     source $ZSH_REPO/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
     # All of this stuff has to go AFTER the above statement...
