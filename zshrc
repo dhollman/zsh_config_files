@@ -309,7 +309,7 @@ fi
 
 
 # No binary files for vi and friends
-local binary_exts='*.(o|lo|gcno|gcda|a|so|aux|dvi|log|swp|fig|bbl|blg|bst|idx|ind|out|toc|class|pdf|ps|pyc)'
+local binary_exts='*.(o|lo|gcno|zwc|gcda|a|la|dylib|so|aux|dvi|swp|fig|bbl|blg|bst|idx|ind|toc|class|pdf|ps|pyc)'
 zstyle ':completion:*:*:vi:*:all-files' ignored-patterns $binary_exts
 zstyle ':completion:*:*:vim:*:all-files' ignored-patterns $binary_exts
 zstyle ':completion:*:*:gvim:*:all-files' ignored-patterns $binary_exts
