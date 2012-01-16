@@ -141,6 +141,10 @@ export LS_COLORS='no=00:fi=00:di=01;36:ln=01;37;46:pi=40;33:so=01;35:do=01;35:bd
 #--rvm related--------------------------{{{2#
 if [ -e $HOME/.rvm ]; then
     [[ -s "$HOME/.rvm/scripts/rvm" ]] && source "$HOME/.rvm/scripts/rvm"  # This loads RVM into a shell session
+else
+    function rvm-prompt() {
+        # do nothing
+    }
 fi
 #---------------------------------------}}}2#
 
