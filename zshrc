@@ -176,7 +176,9 @@ if (( ! $+NO_OH_MY_ZSH )); then
     if [ -e ~/.zsh/oh-my-zsh-plugins.zsh ]; then
         source ~/.zsh/oh-my-zsh-plugins.zsh
     fi
-    ZSH_THEME="bira"
+    if (( ! $+ZSH_THEME )); then
+        ZSH_THEME="bira"
+    fi
     export COMPLETION_WAITING_DOTS="true"
     source $ZSH/oh-my-zsh.sh
 fi
