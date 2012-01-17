@@ -91,6 +91,9 @@ unsetopt NULL_GLOB
 # to be done, among other things
 zmodload zsh/parameter 2>/dev/null
 
+# Need this...
+setopt extended_glob
+
 #}}}1
 #^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
@@ -121,6 +124,15 @@ source_if_exists $ZSH_LOCAL/paths/fpath.zsh
 #--machine independent fpath variable-------------{{{2#
 if [[ -d $ZSH_LOCAL/functions ]]; then
     fpath=($ZSH_LOCAL/functions $fpath)
+    # Autoload everything in zsh_local
+    source_if_exists $ZSH_LOCAL/autoload_functions.zsh
+    for file in $ZSH_LOCAL/functions/*~*.zwc; do
+        funcname=`basename $file`
+        if (( $+functions[$funcname] )); then
+            unfunction $funcname
+        fi
+        autoload -U `basename $file`
+    done
 fi
 #-------------------------------------------------}}}2#
 
@@ -190,6 +202,7 @@ autoload zargs
 #}}}1
 #^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+
 #vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
 #   Environment variables that don't belong elsewhere  {{{1
 #-----------------------------------------------------------------------------------
@@ -228,8 +241,6 @@ zstyle '*' single-ignored no
 #vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
 #   Functions   {{{1
 #-----------------------------------------------------------------------------------
-
-source_if_exists $ZSH_LOCAL/autoload_functions.zsh
 
 div() { 
     for i in {1..$1}; print "$fg_bold[cyan]${(l.((${COLUMNS}))..─.)}$reset_color" 
