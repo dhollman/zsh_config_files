@@ -89,7 +89,7 @@ unsetopt NULL_GLOB
 
 # Necessary for checking to see if "unfunctioning" needs 
 # to be done, among other things
-zmodload zsh/parameter
+zmodload -F zsh/parameter
 
 #}}}1
 #^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
