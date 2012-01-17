@@ -1,0 +1,28 @@
+#!/usr/bin/env zsh
+
+if [[ ${#*} == 0 ]]; then
+    print -u2 "Need at least one argument (name for the alias to be created)"
+    return 1
+fi
+
+
+for name in $*; do
+    if (( $+nameddirs[$name] )); then
+        print -u2 "A directory hash already exists named ~$1"
+        return 1
+    fi
+
+    if (( $+aliases[cd$name] )); then
+        print -u2 "The cd$name alias already exists"
+        return 1
+    fi
+done
+
+for name in $*; do
+    alias cd$name="cd $PWD"
+    echo "alias cd$name='cd $PWD'" >> $ZSH_LOCAL/aliases.zsh
+    hash -d $name=$PWD
+    echo "hash -d $name=$PWD" >> $ZSH_LOCAL/hash_directories.zsh
+done
+
+

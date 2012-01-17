@@ -59,6 +59,18 @@ if [[ -d $ZSH_LOCAL/functions ]]; then
         fi
     done
 fi
+
+if [[ -d $ZSH_REPO/functions ]]; then
+    for file in $ZSH_REPO/functions/**/*; do
+        if [[ -f $file ]]; then
+            zrecompile -p $file
+            if [[ -f $file.zwc.old ]]; then
+                rm -f $file.zwc.old
+            fi
+        fi
+    done
+fi
+
 if [[ -d $ZSH_LOCAL ]]; then
     for file in $ZSH_LOCAL/**/*.zsh; do
         zrecompile -p $file
@@ -74,6 +86,11 @@ fi
 unsetopt NULL_GLOB
 #---------------------------------------}}}2#
 
+
+# Necessary for checking to see if "unfunctioning" needs 
+# to be done, among other things
+zmodload zsh/parameter
+
 #}}}1
 #^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
@@ -88,6 +105,15 @@ source_if_exists $ZSH_LOCAL/paths/path.zsh
 
 # Repo fpath directory; local function directories override this
 fpath=($ZSH_REPO/functions $fpath)
+#--Autoload zsh_repo functions--------------------{{{2
+for file in $ZSH_REPO/functions/*; do
+    funcname=`basename $file`
+    if (( $+functions[$funcname] )); then
+        unfunction $funcname
+    fi
+    autoload -U `basename $file`
+done
+#-------------------------------------------------}}}2
 
 # fpath
 source_if_exists $ZSH_LOCAL/paths/fpath.zsh
@@ -96,7 +122,6 @@ source_if_exists $ZSH_LOCAL/paths/fpath.zsh
 if [[ -d $ZSH_LOCAL/functions ]]; then
     fpath=($ZSH_LOCAL/functions $fpath)
 fi
-
 #-------------------------------------------------}}}2#
 
 # Make sure we don't add too many things to the path arrays that we're adding stuff to
@@ -397,7 +422,7 @@ alias random='od -An -N2 -i /dev/urandom'
 alias sop="source ~/.zshrc"
 alias sorc="source /etc/csh.cshrc && source /etc/csh.login && source ~/.zshrc"
 alias info='info $1 | less'
-alias aliascd='aliasadd -p "cd Aliases" $1 cd `pwd`'
+alias aliascd='cdalias'
 alias c="clear"
 alias mmv='noglob zmv -W'
 alias gpush='git commit -a -m "`date` quick push using the gpush alias.  (Probably means I have not done anything worth talking about since the last commit, but I need to push quickly; or, it could just be laziness)" && git push'
