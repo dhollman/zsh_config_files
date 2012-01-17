@@ -92,6 +92,7 @@ source_if_exists $ZSH_LOCAL/paths/fpath.zsh
 if [[ -d $ZSH_LOCAL/functions ]]; then
     fpath=($ZSH_LOCAL/functions $fpath)
 fi
+
 #-------------------------------------------------}}}2#
 
 # Make sure we don't add too many things to the path arrays that we're adding stuff to
