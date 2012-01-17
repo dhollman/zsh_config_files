@@ -82,8 +82,12 @@ unsetopt NULL_GLOB
 #   Path variables   {{{1
 #-----------------------------------------------------------------------------------
 
+
 # path
 source_if_exists $ZSH_LOCAL/paths/path.zsh
+
+# Repo fpath directory; local function directories override this
+fpath=($ZSH_REPO/functions $fpath)
 
 # fpath
 source_if_exists $ZSH_LOCAL/paths/fpath.zsh
