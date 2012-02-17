@@ -1,0 +1,3 @@
+#!/usr/bin/env zsh
+
+print -u2 "Not implemented yet."

@@ -1,0 +1,16 @@
+
+if [[ $#* = 0 ]]; then
+    echo Need at least one function as an argument
+    return 1
+fi
+
+for func in $*; do
+    if (( $+functions[$func] )); then
+        unfunction $func
+        autoload $func
+    else
+        echo $func is not a function in the current context.  
+        echo "  Attempting to autoload anyway..."
+        autoload $func
+    fi
+done

@@ -232,6 +232,7 @@ export GREP_COLOR='1;36'
 unsetopt auto_cd
 bindkey '\e.' insert-last-word
 zstyle '*' single-ignored no
+unalias gm
 #---------------------------------------------------}}}2
 
 #}}}1
@@ -423,6 +424,7 @@ alias virc="vi $ZSH_REPO/zshrc && source ~/.zshrc && echo 'Sourcing ~/.zshrc' "
 alias vio='vi output.dat'
 alias vii='vi input.dat'
 alias viv='vi ~/.vimrc'
+alias viro='vim -R'
 alias vimro="vim -R"
 alias vs='vim -S *.vimsession'
 #-----------------------------------------}}}2#
@@ -439,11 +441,10 @@ alias mmv='noglob zmv -W'
 alias gpush='git commit -a -m "`date` quick push using the gpush alias.  (Probably means I have not done anything worth talking about since the last commit, but I need to push quickly; or, it could just be laziness)" && git push'
 alias gpushp='pushp "`date` quick push using the gpush alias.  (Probably means I have not done anything worth talking about since the last commit, but I need to push quickly; or, it could just be laziness)"'
 
+
 # The rest of the aliases go in these files...
 
-if [ -e $HOME/.zsh/aliases.zsh ]; then
-    source $HOME/.zsh/aliases.zsh
-fi
+source_if_exists $HOME/.zsh/aliases.zsh
 
 if [ -d $HOME/.zsh/working_environments ]; then
     for f in $HOME/.zsh/working_environments/**/*; do
