@@ -42,6 +42,9 @@ if ((! $+ZSH_LOCAL)); then
 fi
 
 
+source_if_exists $ZSH_LOCAL/source_first.zsh
+
+
 #--Compile stuff------------------------{{{2#
 autoload -U zrecompile
 zrecompile -p $ZSH_REPO/zshrc
@@ -136,9 +139,16 @@ if [[ -d $ZSH_LOCAL/functions ]]; then
 fi
 #-------------------------------------------------}}}2#
 
+source_if_exists $ZSH_LOCAL/paths/manpath.zsh
+
+source_if_exists $ZSH_LOCAL/paths/pythonpath.zsh
+
 # Make sure we don't add too many things to the path arrays that we're adding stuff to
 typeset -U path
 typeset -U fpath
+typeset -U manpath
+#typeset -U PYTHONPATH
+typeset -U pythonpath
 
 #}}}1
 #^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -206,7 +216,15 @@ autoload zargs
 #vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
 #   Environment variables that don't belong elsewhere  {{{1
 #-----------------------------------------------------------------------------------
+if [[ -e $HOME/.pythonrc.py ]]; then
+    PYTHONSTARTUP=$HOME/.pythonrc.py
+fi
+
 source_if_exists $ZSH_LOCAL/environment.zsh
+
+WORKON_HOME=$HOME/.virtualenvs
+
+
 #}}}1
 #^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
@@ -230,9 +248,14 @@ fi
 unalias ..
 export GREP_COLOR='1;36'
 unsetopt auto_cd
+bindkey -v
 bindkey '\e.' insert-last-word
 zstyle '*' single-ignored no
 unalias gm
+
+# No correction!
+unsetopt correct_all
+
 #---------------------------------------------------}}}2
 
 #}}}1
@@ -248,12 +271,12 @@ div() {
 }
 
 
-run-fg-editor() {
+run-fg() {
     zle push-input
-    BUFFER="fg %vi"
+    BUFFER="fg %"
     zle accept-line
 }
-zle -N run-fg-editor
+zle -N run-fg
 
 
 #--Opening files quickly with vim---------{{{2#
@@ -309,8 +332,8 @@ bindkey '^Xh' _complete_help
 # Menu selection :: pick multiple items in menu
 bindkey -M menuselect '\C-^M' accept-and-menu-complete
 ##
-# run-fg-editor :: Forgrounds the editor
-bindkey '\e^Z' run-fg-editor
+# run-fg :: Forgrounds the most recent backgrounded process
+bindkey '\e^Z' run-fg
 #}}}1
 #^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
