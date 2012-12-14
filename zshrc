@@ -341,9 +341,12 @@ bindkey -v
 bindkey -M viins '^r' history-incremental-search-backward
 bindkey -M vicmd '^r' history-incremental-search-backward
 bindkey -M viins '^k' history-search-backward
-bindkey -M vicmd 'k' history-search-backward
+bindkey -M vicmd '^k' history-search-backward
+bindkey -M vicmd 'k'  up-line-or-history
 bindkey -M viins '^j' history-search-forward
-bindkey -M vicmd 'j' history-search-forward
+bindkey -M vicmd '^j' history-search-forward
+bindkey -M vicmd 'j'  down-line-or-history
+bindkey -M viins '' backward-delete-char
 #}}}1
 #^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
