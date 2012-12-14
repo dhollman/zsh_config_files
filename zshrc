@@ -287,6 +287,20 @@ function vivspp() { vim $3 "+vsp $2" "+vsp $1" }
 function vivsppp() { vim $4 "+vsp $3" "+vsp $2" "+vsp $1" }
 #-----------------------------------------}}}2#
 
+#--Move something, creating directories if necessary{{{2#
+function mvp ()            
+{
+  lstdir=$argv[-1]
+  if [[ $argv[-1] == *.* ]]; then
+    lstdir=`dirname $argv[-1]`
+  fi
+  if [[ ! -e $lstdir ]]; then
+    mkdir -p $lstdir
+  fi
+  mv $@
+}
+#---------------------------------------}}}2#
+
 
 # Push changes to zshrc and such
 pushp() {
@@ -369,6 +383,10 @@ bindkey -M vicmd '' vi-beginning-of-line
 bindkey -M viins '' vi-beginning-of-line
 bindkey -M vicmd '' vi-end-of-line
 bindkey -M viins '' vi-end-of-line
+##
+# Fix delete
+bindkey -M vicmd '[3~' delete-char
+bindkey -M viins '[3~' delete-char
 #}}}1
 #^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
