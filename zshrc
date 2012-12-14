@@ -363,6 +363,12 @@ bindkey -M vicmd 'u' vi-undo-change
 ##
 # Yank to end of line
 bindkey -M vicmd 'Y' vi-yank-eol
+##
+# Fix the behavior of the home key
+bindkey -M vicmd '' vi-beginning-of-line
+bindkey -M viins '' vi-beginning-of-line
+bindkey -M vicmd '' vi-end-of-line
+bindkey -M viins '' vi-end-of-line
 #}}}1
 #^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
