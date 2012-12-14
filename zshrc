@@ -248,7 +248,6 @@ fi
 unalias ..
 export GREP_COLOR='1;36'
 unsetopt auto_cd
-bindkey -v
 bindkey '\e.' insert-last-word
 zstyle '*' single-ignored no
 unalias gm
@@ -334,6 +333,17 @@ bindkey -M menuselect '\C-^M' accept-and-menu-complete
 ##
 # run-fg :: Forgrounds the most recent backgrounded process
 bindkey '\e^Z' run-fg
+##
+# Vi mode
+bindkey -v
+##
+# History search
+bindkey -M viins '^r' history-incremental-search-backward
+bindkey -M vicmd '^r' history-incremental-search-backward
+bindkey -M viins '^k' history-search-backward
+bindkey -M vicmd 'k' history-search-backward
+bindkey -M viins '^j' history-search-forward
+bindkey -M vicmd 'j' history-search-forward
 #}}}1
 #^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
