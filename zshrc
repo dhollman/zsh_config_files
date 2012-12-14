@@ -248,7 +248,6 @@ fi
 unalias ..
 export GREP_COLOR='1;36'
 unsetopt auto_cd
-bindkey '\e.' insert-last-word
 zstyle '*' single-ignored no
 unalias gm
 
@@ -325,6 +324,9 @@ alias pullrc=pullp
 #   Key Bindings   {{{1
 #-----------------------------------------------------------------------------------
 ##
+# put ALT-. back to the way I like it
+bindkey '\e.' insert-last-word
+##
 # Completion help :: useful for coming up with those completion context strings
 bindkey '^Xh' _complete_help
 ##
@@ -337,16 +339,30 @@ bindkey '\e^Z' run-fg
 # Vi mode
 bindkey -v
 ##
-# History search
-bindkey -M viins '^r' history-incremental-search-backward
-bindkey -M vicmd '^r' history-incremental-search-backward
-bindkey -M viins '^k' history-search-backward
-bindkey -M vicmd '^k' history-search-backward
-bindkey -M vicmd 'k'  up-line-or-history
-bindkey -M viins '^j' history-search-forward
-bindkey -M vicmd '^j' history-search-forward
-bindkey -M vicmd 'j'  down-line-or-history
+# Fix vi's backspace to allow it to go past the insertion point
 bindkey -M viins '' backward-delete-char
+##
+# History search
+bindkey -M viins '^r'   history-incremental-search-backward
+#bindkey -M vicmd '^r'   history-incremental-search-backward
+bindkey -M viins '^k'   history-search-backward
+bindkey -M vicmd '^k'   history-search-backward
+bindkey -M vicmd 'k'    up-line-or-history
+bindkey -M viins '^j'   history-search-forward
+bindkey -M vicmd '^j'   history-search-forward
+bindkey -M vicmd 'j'    down-line-or-history
+bindkey -M viins '\e' accept-and-infer-next-history
+##
+# Spelling correction, because I can...
+bindkey -M vicmd 'z=' spell-word
+##
+# Fix the stupid undo to be vim like instead of vi like
+#bindkey -M vicmd 'u' undo
+# The vi undo keeps the cursor in the same place, even if it does only go back 1
+bindkey -M vicmd 'u' vi-undo-change
+##
+# Yank to end of line
+bindkey -M vicmd 'Y' vi-yank-eol
 #}}}1
 #^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
