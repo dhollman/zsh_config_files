@@ -338,6 +338,9 @@ alias pullrc=pullp
 #   Key Bindings   {{{1
 #-----------------------------------------------------------------------------------
 ##
+# Vi mode
+bindkey -v
+##
 # put ALT-. back to the way I like it
 bindkey '\e.' insert-last-word
 ##
@@ -349,9 +352,6 @@ bindkey -M menuselect '\C-^M' accept-and-menu-complete
 ##
 # run-fg :: Forgrounds the most recent backgrounded process
 bindkey '\e^Z' run-fg
-##
-# Vi mode
-bindkey -v
 ##
 # Fix vi's backspace to allow it to go past the insertion point
 bindkey -M viins '' backward-delete-char
