@@ -351,7 +351,7 @@ bindkey '^Xh' _complete_help
 bindkey -M menuselect '\C-^M' accept-and-menu-complete
 ##
 # run-fg :: Forgrounds the most recent backgrounded process
-bindkey '\e^Z' run-fg
+bindkey '\e' run-fg
 ##
 # Fix vi's backspace to allow it to go past the insertion point
 bindkey -M viins '' backward-delete-char
