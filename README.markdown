@@ -38,9 +38,28 @@ it would be silly to exclude
 
 Machine-specific environment variables
 --------------------------------------
-* $ZSH_REPO must be set to the directory of the zsh config scripts repository (i. e. the directory that this file is in)
-* $ZSH_LOCAL can be set to use something other than $HOME/.zsh for the machine-specific files directory
-* $NO_OH_MY_ZSH can be set to anything to prevent oh-my-zsh from loading.  (use `unset` to unset it) 
-* $ENABLE_ZSH_HIGHLIGHTING can be set to false to turn off syntax highlighting (it is true by default)
+*  `$ZSH_REPO` must be set to the directory of the zsh config scripts repository (i. e. the directory that this file is in)
+*  `$ZSH_LOCAL` can be set to use something other than $HOME/.zsh for the machine-specific files directory
+*  `$NO_OH_MY_ZSH` can be set to anything to prevent oh-my-zsh from loading.  (use `unset` to unset it) 
+*  `$ENABLE_ZSH_HIGHLIGHTING` can be set to false to turn off syntax highlighting (it is true by default)
+
+Setup Process on a New Machine
+------------------------------
+1.  Set up ssh keys and such on the new machine:
+      *  Run `ssh-keygen` to generate the key pair.
+      *  Copy the file `id_rsa.pub` to `<descr. of machine>.rsapub`
+      *  scp the .rsapub file to wherever the new machine needs ssh access to, then on those machines,
+         append it to the end of the ~/.ssh/authorized_keys file.
+      *  Do the same process in reverse for any machines you need to be able to access the new machine.
+      *  Finally, to be able to push and pull this repository from github, add the .rsapub key to the github
+         list of ssh keys at https://github.com/settings/ssh
+2.  Set up the git profile on the new machine.  If it doesn't have git, this is a problem.  I'll figure
+    this one out when I come across it.
+      *  Copy over most of the mundane details from the ~/.gitconfig file on some other machine.
+3.  Clone the repository to a reasonable placy, like `~/Projects/config_scripts/zsh`
+      *  In the directory `~/Projects/config_scripts`, run `git clone git@github.com:dhollman/zsh_config_files.git zsh`
+4.  Copy the directory `sample_zsh_local_dir` to the `~/.zsh` or something like that
+5.  Copy `sample_local_zshrc` to `~/.zshrc`
+
 
 

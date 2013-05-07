@@ -1,4 +1,4 @@
-###########################################################
+##########################################################
 #                                                         # 
 #   David Hollman's nice, clean, organized .zshrc file    #
 #   With features copied/translated from my .tcshrc file  #
@@ -172,6 +172,8 @@ HISTFILE=~/.histfile
 HISTSIZE=10000
 # number of lines saved in the history after logout
 SAVEHIST=10000 
+# No shared history
+unsetopt SHARE_HISTORY
 #-----------------------------------------}}}2#
 
 # Stay compatible to sh and IFS
