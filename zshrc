@@ -53,7 +53,18 @@ if [[ -f $ZSH_REPO/zshrc.zwc.old ]]; then
 fi
 setopt NULL_GLOB
 if [[ -d $ZSH_LOCAL/functions ]]; then
-    for file in $ZSH_LOCAL/functions/**/*; do
+    for file in $ZSH_LOCAL/functions/**/*~*.(zwc|py); do
+        if [[ -f $file ]]; then
+            zrecompile -p $file
+            if [[ -f $file.zwc.old ]]; then
+                rm -f $file.zwc.old
+            fi
+        fi
+    done
+fi
+
+if [[ -d $ZSH_LOCAL/chpwd_functions ]]; then
+    for file in $ZSH_LOCAL/chpwd_functions/**/*~*.(zwc|py); do
         if [[ -f $file ]]; then
             zrecompile -p $file
             if [[ -f $file.zwc.old ]]; then
@@ -64,7 +75,7 @@ if [[ -d $ZSH_LOCAL/functions ]]; then
 fi
 
 if [[ -d $ZSH_REPO/functions ]]; then
-    for file in $ZSH_REPO/functions/**/*; do
+    for file in $ZSH_REPO/functions/**/*~*.(zwc|py); do
         if [[ -f $file ]]; then
             zrecompile -p $file
             if [[ -f $file.zwc.old ]]; then
@@ -124,7 +135,7 @@ done
 # fpath
 source_if_exists $ZSH_LOCAL/paths/fpath.zsh
 
-#--machine independent fpath variable-------------{{{2#
+#--machine dependent fpath variable---------------{{{2#
 if [[ -d $ZSH_LOCAL/functions ]]; then
     fpath=($ZSH_LOCAL/functions $fpath)
     # Autoload everything in zsh_local
@@ -137,6 +148,13 @@ if [[ -d $ZSH_LOCAL/functions ]]; then
         autoload -U `basename $file`
     done
 fi
+if [[ -d $ZSH_LOCAL/chpwd_functions ]]; then
+    fpath=($ZSH_LOCAL/chpwd_functions $fpath)
+    for file in $ZSH_LOCAL/chpwd_functions/*~*.zwc; do
+        chpwd_functions=(${chpwd_functions[@]} ${file:t})
+        autoload -U ${file:t}
+    done
+fi
 #-------------------------------------------------}}}2#
 
 source_if_exists $ZSH_LOCAL/paths/manpath.zsh
@@ -147,6 +165,7 @@ source_if_exists $ZSH_LOCAL/paths/pythonpath.zsh
 typeset -U path
 typeset -U fpath
 typeset -U manpath
+typeset -U chpwd_functions
 #typeset -U PYTHONPATH
 typeset -U pythonpath
 
@@ -201,6 +220,7 @@ else
     }
 fi
 #---------------------------------------}}}2#
+ 
 
 #}}}1
 #^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -240,7 +260,7 @@ if (( ! $+NO_OH_MY_ZSH )); then
         source ~/.zsh/oh-my-zsh-plugins.zsh
     fi
     if (( ! $+ZSH_THEME )); then
-        ZSH_THEME="bira"
+        ZSH_THEME="bira-mod"
     fi
     export COMPLETION_WAITING_DOTS="true"
     source $ZSH/oh-my-zsh.sh
@@ -359,8 +379,8 @@ bindkey '\e' run-fg
 bindkey -M viins '' backward-delete-char
 ##
 # History search
-bindkey -M viins '^r'   history-incremental-search-backward
-#bindkey -M vicmd '^r'   history-incremental-search-backward
+bindkey '^r' history-incremental-pattern-search-backward
+bindkey -M viins '^r'   history-incremental-pattern-search-backward
 bindkey -M viins '^k'   history-search-backward
 bindkey -M vicmd '^k'   history-search-backward
 bindkey -M vicmd 'k'    up-line-or-history
@@ -368,6 +388,17 @@ bindkey -M viins '^j'   history-search-forward
 bindkey -M vicmd '^j'   history-search-forward
 bindkey -M vicmd 'j'    down-line-or-history
 bindkey -M viins '\e' accept-and-infer-next-history
+#--edit-command-line--------------------{{{2#
+export VISUAL=vim
+autoload -z edit-command-line
+zle -N edit-command-line
+bindkey -M vicmd v edit-command-line
+#---------------------------------------}}}2#
+
+#--incremental search-------------------{{{2#
+bindkey -M isearch '^K' history-incremental-search-backward
+bindkey -M isearch '^J' history-incremental-search-forward
+#---------------------------------------}}}2#
 ##
 # Spelling correction, because I can...
 bindkey -M vicmd 'z=' spell-word
@@ -396,6 +427,9 @@ bindkey -M viins '[3~' delete-char
 #vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
 #   Tab completion configuration   {{{1
 #-----------------------------------------------------------------------------------
+
+. /Users/dhollman/.zsh/completion.zsh
+
 # Don't fill in first option
 setopt list_ambiguous
 setopt auto_list
@@ -435,7 +469,7 @@ fi
 
 
 # No binary files for vi and friends
-local binary_exts='*.(o|lo|gcno|zwc|gcda|a|la|dylib|so|aux|dvi|swp|fig|bbl|blg|bst|idx|ind|toc|class|pdf|ps|pyc)'
+local binary_exts='*.(o|lo|gcno|zwc|gcda|a|la|dylib|so|aux|dvi|swp|fig|bbl|blg|bst|idx|ind|toc|class|pdf|ps|pyc|wfn|wfn.tmp)'
 zstyle ':completion:*:*:vi:*:all-files' ignored-patterns $binary_exts
 zstyle ':completion:*:*:vim:*:all-files' ignored-patterns $binary_exts
 zstyle ':completion:*:*:gvim:*:all-files' ignored-patterns $binary_exts
@@ -525,18 +559,36 @@ alias gpushp='pushp "`date` quick push using the gpush alias.  (Probably means I
 source_if_exists $HOME/.zsh/aliases.zsh
 
 if [ -d $HOME/.zsh/working_environments ]; then
-    for f in $HOME/.zsh/working_environments/**/*; do
-        directory=`dirname $f`
-        if [ -e $directory/.before.zsh ]; then
-            if [ -e $directory/.after.zsh ]; then
-                alias `basename $f .zsh`="source $directory/.before.zsh; source $f; source $directory/.after.zsh; "
+    for f in $HOME/.zsh/working_environments/**/*.zsh; do
+        # make the function load stuff
+        fload="
+        if [ -e $ZSH_LOCAL/functions/${f:h:t} ]; then
+            fpath=($ZSH_LOCAL/functions/${f:h:t} $fpath)
+            typeset -U fpath
+            for funfile in $ZSH_LOCAL/functions/${f:h:t}/*~*.(zwc|py); do
+                if (( \$+functions[\${funfile:t:r}] )); then
+                    unfunction \${funfile:t:r}
+                fi
+                autoload -U \${funfile:t:r}
+            done
+            for funfile in $ZSH_LOCAL/functions/${f:h:t}/*.py; do
+                alias \${funfile:t:r}=\"python \$funfile\"
+            done
+        fi
+        "
+        # Make the alias 
+        if [[ ${f:t} != .before.zsh && ${f:t} != .after.zsh ]]; then
+            if [ -e ${f:h}/.before.zsh ]; then
+                if [ -e ${f:h}/.after.zsh ]; then
+                    alias ${f:t:r}="source ${f:h}/.before.zsh; source $f; source ${f:h}/.after.zsh; $fload"
+                else
+                    alias ${f:t:r}="source ${f:h}/.before.zsh; source $f; $fload"
+                fi
+            elif [ -e ${f:h}/.after.zsh ]; then
+                alias ${f:t:r}="source $f; source ${f:h}/.after.zsh; $fload"
             else
-                alias `basename $f .zsh`="source $directory/.before.zsh; source $f"
+                alias ${f:t:r}="source $f; $fload"
             fi
-        elif [ -e $directory/.after.zsh ]; then
-            alias `basename $f .zsh`="source $f; source $directory/.after.zsh; "
-        else
-            alias `basename $f .zsh`="source $f"
         fi
     done
 fi

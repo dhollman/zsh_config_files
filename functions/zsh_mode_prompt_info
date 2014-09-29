@@ -1,0 +1,5 @@
+#!/usr/bin/env zsh
+
+if [[ ${+MY_ZSH_MODE} -eq 1 ]]; then
+    echo "$ZSH_THEME_ZSH_MODE_PROMPT_PREFIX${MY_ZSH_MODE}$ZSH_THEME_ZSH_MODE_PROMPT_SUFFIX"
+fi

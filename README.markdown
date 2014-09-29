@@ -60,6 +60,10 @@ Setup Process on a New Machine
       *  In the directory `~/Projects/config_scripts`, run `git clone git@github.com:dhollman/zsh_config_files.git zsh`
 4.  Copy the directory `sample_zsh_local_dir` to the `~/.zsh` or something like that
 5.  Copy `sample_local_zshrc` to `~/.zshrc`
+6.  Run `git submoudle init` in the main `$ZSH_REPO` directory.
+6.  Run `git submoudle update` in the main `$ZSH_REPO` directory.
+
+
 
 
 
