@@ -9,7 +9,7 @@ git submodule update
 if [[ ! -e ${0:h}/oh-my-zsh/custom/themes/bira-mod.zsh-theme ]]; then
     echo "Linking theme file"
     mkdir -p ${0:h}/oh-my-zsh/custom/themes
-    ln -s custom/bira-mod.zsh-theme ${0:h}/oh-my-zsh/custom/themes/bira-mod.zsh-theme
+    ln custom/bira-mod.zsh-theme ${0:h}/oh-my-zsh/custom/themes/bira-mod.zsh-theme
 fi
 
 # Parse arguments
