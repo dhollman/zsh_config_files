@@ -6,6 +6,12 @@ local -A opts
 git submodule init
 git submodule update
 
+if [[ ! -e ${0:h}/oh-my-zsh/custom/themes/bira-mod.zsh-theme ]]; then
+    echo "Linking theme file"
+    mkdir -p ${0:h}/oh-my-zsh/custom/themes
+    ln -s custom/bira-mod.zsh-theme ${0:h}/oh-my-zsh/custom/themes/bira-mod.zsh-theme
+fi
+
 # Parse arguments
 zparseopts -A opts \
     -zsh-local: \
@@ -55,7 +61,7 @@ local zshrcloc=${opts[--zshrc]:-$HOME/.zshrc}
 if [[ ! -e $zshrcloc ]]; then
     echo "Deploying local .zshrc file in $zshrcloc"
     sed -e "s@%ZSH_REPO_LOC%@${(q)zshrepo}@g" \
-            -e "s@%ZSH_LOCAL_LOC%@${(q)zshrcloc}@g" \
+            -e "s@%ZSH_LOCAL_LOC%@${(q)zshloc}@g" \
             < $zshrepo/zshrc.local.in > $zshrcloc
 fi
 
@@ -72,3 +78,4 @@ __deploy aliases.zsh
 __deploy environment.zsh
 __deploy oh-my-zsh-plugins.zsh
 __deploy source_last.zsh
+

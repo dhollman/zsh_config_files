@@ -33,6 +33,13 @@ source_if_exists() {
         source $1
     fi
 }
+
+safe_unalias() {
+    if (( $+aliases[$1]  )); then
+        unalias $1
+    fi
+}
+
 #-----------------------------------------------}}}2#
     
 
@@ -267,11 +274,12 @@ if (( ! $+NO_OH_MY_ZSH )); then
 fi
 
 #--Undo/change things I don't like about oh-my-zsh--{{{2
-unalias ..
+safe_unalias ..
 export GREP_COLOR='1;36'
 unsetopt auto_cd
 zstyle '*' single-ignored no
-unalias gm
+safe_unalias gm
+
 
 # No correction!
 unsetopt correct_all
@@ -420,6 +428,13 @@ bindkey -M viins '' vi-end-of-line
 # Fix delete
 bindkey -M vicmd '[3~' delete-char
 bindkey -M viins '[3~' delete-char
+
+# Fix numeric keypad
+bindkey -s "^[OM" ""
+bindkey -s "^[OX" "="
+bindkey "^[OH" beginning-of-line
+bindkey "^[OF" end-of-line
+
 #}}}1
 #^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
@@ -428,7 +443,8 @@ bindkey -M viins '[3~' delete-char
 #   Tab completion configuration   {{{1
 #-----------------------------------------------------------------------------------
 
-. /Users/dhollman/.zsh/completion.zsh
+# TODO Copy this over to repository
+#. /Users/dhollman/.zsh/completion.zsh
 
 # Don't fill in first option
 setopt list_ambiguous
