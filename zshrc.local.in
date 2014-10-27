@@ -1,0 +1,8 @@
+#########################################################
+# Local .zshrc file.  Avoid modifying whenever possible #
+#########################################################
+
+export ZSH_REPO=%ZSH_REPO_LOC%
+export ZSH_LOCAL=%ZSH_LOCAL_LOC%
+
+source $ZSH_REPO/zshrc
