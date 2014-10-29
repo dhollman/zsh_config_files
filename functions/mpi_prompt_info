@@ -1,0 +1,12 @@
+#!/usr/bin/env zsh
+
+set history_subst_pattern
+local mpi_active
+if [[ -x /opt/local/bin/port ]]; then
+    mpi_active=${${$( /opt/local/bin/port select mpi 2>/dev/null | grep "(active)" )/\(active\)/}/-fortran/}
+    if [[ ! $mpi_active == none ]]; then
+        echo "${ZSH_THEME_MPI_PROMPT_PREFIX:=(}${mpi_active}${ZSH_THEME_MPI_PROMPT_SUFFIX:=)}"
+    else
+        return 1
+    fi
+fi
