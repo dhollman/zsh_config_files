@@ -1,0 +1,25 @@
+
+local echo_string
+local name_pre
+local name_post
+if [[ $+ZSH_ACTIVE_PORT_SELECTIONS == 1 ]]; then
+    for name selected in ${(kv)ZSH_ACTIVE_PORT_SELECTIONS}; do
+        if [[ "x"$selected"x" != "xnonex" ]]; then
+            if [[ ${+ZSH_THEME_ACTIVE_PORT_NAME_PRE[$name]} == 1 ]]; then
+                name_pre=`eval "echo ${ZSH_THEME_ACTIVE_PORT_NAME_PRE[$name]}"`
+            else
+                name_pre=''
+            fi
+            if [[ ${+ZSH_THEME_ACTIVE_PORT_NAME_POST[$name]} == 1 ]]; then
+                name_post=`eval "echo ${ZSH_THEME_ACTIVE_PORT_NAME_POST[$name]}"`
+            else
+                name_post=''
+            fi
+            echo_string="$echo_string ${ZSH_THEME_ACTIVE_PORT_PREFIX[$name]:-(}${name_pre}${selected}${name_post}${ZSH_THEME_ACTIVE_PORT_SUFFIX[$name]:-)}"
+        fi
+    done
+    echo $echo_string
+else
+    return 1
+fi
+

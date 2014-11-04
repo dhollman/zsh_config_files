@@ -298,8 +298,8 @@ unsetopt correct_all
 #   Functions   {{{1
 #-----------------------------------------------------------------------------------
 
-div() { 
-    for i in {1..$1}; print "$fg_bold[cyan]${(l.((${COLUMNS}))..─.)}$reset_color" 
+div() {
+    for i in {1..$1}; print "$fg_bold[cyan]${(l.((${COLUMNS}))..─.)}$reset_color"
 }
 
 
@@ -367,6 +367,18 @@ alias pullrc=pullp
 #}}}1
 #^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+#vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
+#   Hook functions {{{1
+#-----------------------------------------------------------------------------------
+
+if [[ -x `which port` ]]; then
+    # If macports is installed, check which port selections to display relevant to the current context
+    chpwd_functions=( $chpwd_functions _get_active_port_selections )
+fi
+
+
+#}}}1
+#^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 #vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
 #   Key Bindings   {{{1

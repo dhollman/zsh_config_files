@@ -1,0 +1,47 @@
+# Get the important ports to display which are selected in the command line
+
+# Find the executable; do nothing if it doesn't exist
+local port=`which port`
+if [[ ! -x $port ]]; then
+    return 1
+fi
+
+local -aU relevant_ports
+local eval_result
+
+# Traverse the file system from the current working directory looking for .port_context files
+local currentdir=$PWD
+while [[ ${currentdir} != ${currentdir:h} ]]; do
+    if [[ -r ${currentdir}/.port_context ]]; then
+        eval_result=`python $ZSH_REPO/helper_scripts/parse_port_context.py ${currentdir}/.port_context relevant_selections relevant_select relevant relevant_ports`
+        if [[ $? == 0 ]]; then
+            relevant_ports=( $relevant_ports ${=eval_result} )
+        fi
+    fi
+    currentdir=${currentdir:h}
+done
+
+local -A filters
+filters=(
+    mpi '${__VARNAME__/-fortran/}'
+    gcc '${__VARNAME__/mp-/}'
+    clang '${__VARNAME__/mp-/}'
+)
+
+if [[ $+ZSH_ACTIVE_PORT_SELECTIONS == 1 ]]; then
+    unset ZSH_ACTIVE_PORT_SELECTIONS
+fi
+typeset -Ax ZSH_ACTIVE_PORT_SELECTIONS
+
+local -a sellist
+local outval
+local outstring
+for rport in $relevant_ports; do
+    sellist=( $( $port select --summary | grep "^$rport" 2>/dev/null ) )
+    outval=$sellist[2]
+    if [[ ${+filters[$rport]} == 1 ]]; then
+        outval=`eval "echo ${filters[$rport]/__VARNAME__/outval}"`
+    fi
+    ZSH_ACTIVE_PORT_SELECTIONS=( ${(kv)ZSH_ACTIVE_PORT_SELECTIONS} $rport $outval )
+done
+
