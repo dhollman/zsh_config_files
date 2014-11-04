@@ -6,10 +6,11 @@ local -A opts
 git submodule init
 git submodule update
 
-if [[ ! -e ${0:h}/oh-my-zsh/custom/themes/bira-mod.zsh-theme ]]; then
+if [[ ! -e ${0:h}/oh-my-zsh/custom/themes/dsh.zsh-theme ]]; then
     echo "Linking theme file"
     mkdir -p ${0:h}/oh-my-zsh/custom/themes
-    ln custom/bira-mod.zsh-theme ${0:h}/oh-my-zsh/custom/themes/bira-mod.zsh-theme
+    # Make a hard link.  This is dangerous, but the only other option is copying, which is worse
+    ln ${0:h}/custom/dsh.zsh-theme ${0:h}/oh-my-zsh/custom/themes/dsh.zsh-theme
 fi
 
 # Parse arguments
@@ -50,7 +51,7 @@ if [[ ! -e $zshloc/paths/manpath.zsh ]]; then
     echo "#################" >> $zshloc/paths/manpath.zsh
     echo "" >> $zshloc/paths/manpath.zsh
     foreach part ( ${=MANPATH//:/ } )
-        echo "path=( \$path $part )" >> $zshloc/paths/manpath.zsh
+        echo "manpath=( \$manpath $part )" >> $zshloc/paths/manpath.zsh
     end
 fi
 

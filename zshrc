@@ -114,6 +114,7 @@ zmodload zsh/parameter 2>/dev/null
 
 # Need this...
 setopt extended_glob
+setopt csh_null_glob
 
 #}}}1
 #^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -122,6 +123,9 @@ setopt extended_glob
 #vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
 #   Path variables   {{{1
 #-----------------------------------------------------------------------------------
+
+# tie the pythonpath to PYTHONPATH
+typeset -T PYTHONPATH pythonpath
 
 
 # path
@@ -176,6 +180,7 @@ typeset -U chpwd_functions
 #typeset -U PYTHONPATH
 typeset -U pythonpath
 
+
 #}}}1
 #^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
@@ -210,7 +215,6 @@ setopt CLOBBER
 
 # If a pattern for filename generation has no matches, delete the pattern from the argument list; do not report an error unless all the patterns in a
 # command have no matches.  Overrides NOMATCH.
-setopt CSH_NULL_GLOB
 
 #--Pretty colors --------------------------{{{2#
 autoload colors; colors;
