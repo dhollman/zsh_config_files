@@ -5,42 +5,72 @@ local current_dir='%{$terminfo[bold]$fg[blue]%} %~%{$reset_color%}'
 local git_branch='$(git_prompt_info)%{$reset_color%}'
 local zsh_mode_text='$(zsh_mode_prompt_info)%{$reset_color%}'
 local active_port_mode_text='$( zsh_prompt_port_selections )%{$reset_color%}'
-local left1='$(left_prompt_1)'
-local left2='$(left_prompt_2)'
-local left3='$(left_prompt_3)'
+local left1='$( left_prompt 1 )'
+local left2='$( left_prompt 2 )'
+local left3='$( left_prompt 3 )'
 
-local LEFT_PROMPT_PREFIX="%{${FG[088]}%}"
-local LEFT_PROMPT_SUFFIX="%{${reset_color}%}"
 
-function left_prompt_1() {
-    local char
+function left_prompt() {
+    local to_echo
+    case $1 in
+        (1) to_echo="╓ " ;;
+        (2) to_echo="╟"  ;;
+        (3) to_echo="╙ " ;;
+    esac
+
     if [[ $+SHOW_MONKEYS == 1 ]]; then
-        char="🙈  "
-    else
-        char="╓ "
+        case $1 in
+            (1) to_echo="🙈  $to_echo" ;;
+            (2) to_echo="🙉  $to_echo" ;;
+            (3) to_echo="🙊  $to_echo" ;;
+        esac
     fi
-    echo $LEFT_PROMPT_PREFIX$char$LEFT_PROMPT_SUFFIX
+
+    # Find out where we are
+    local LEFT_PROMPT_PREFIX
+    local LEFT_PROMPT_SUFFIX="%{${reset_color}%}"
+
+    case $HOST in
+        (s979263ca.ca.sandia.gov|pi.local) LEFT_PROMPT_PREFIX="%{${FG[088]}%}" ;;
+        (*) LEFT_PROMPT_PREFIX="%{${FG[028]}%}" ;;
+    esac
+
+    if [[ $+NERSC_HOST == 1 ]]; then
+        LEFT_PROMPT_PREFIX="%{${FG[017]}%}"
+    fi
+
+    echo $LEFT_PROMPT_PREFIX$to_echo$LEFT_PROMPT_SUFFIX
 }
 
-function left_prompt_2() {
-    local char
-    if [[ $+SHOW_MONKEYS == 1 ]]; then
-        char="🙉  "
-    else
-        char="╟"
-    fi
-    echo $LEFT_PROMPT_PREFIX$char$LEFT_PROMPT_SUFFIX
-}
-
-function left_prompt_3() {
-    local char
-    if [[ $+SHOW_MONKEYS == 1 ]]; then
-        char="🙊  "
-    else
-        char="╙ "
-    fi
-    echo $LEFT_PROMPT_PREFIX$char$LEFT_PROMPT_SUFFIX
-}
+#function left_prompt_1() {
+#    local char
+#    if [[ $+SHOW_MONKEYS == 1 ]]; then
+#        char="🙈  "
+#    else
+#        char="╓ "
+#    fi
+#    echo $LEFT_PROMPT_PREFIX$char$LEFT_PROMPT_SUFFIX
+#}
+#
+#function left_prompt_2() {
+#    local char
+#    if [[ $+SHOW_MONKEYS == 1 ]]; then
+#        char="🙉  "
+#    else
+#        char="╟"
+#    fi
+#    echo $LEFT_PROMPT_PREFIX$char$LEFT_PROMPT_SUFFIX
+#}
+#
+#function left_prompt_3() {
+#    local char
+#    if [[ $+SHOW_MONKEYS == 1 ]]; then
+#        char="🙊  "
+#    else
+#        char="╙ "
+#    fi
+#    echo $LEFT_PROMPT_PREFIX$char$LEFT_PROMPT_SUFFIX
+#}
 
 PROMPT="${left1}${user_host}${git_branch}${zsh_mode_text} ${active_port_mode_text}
 ${left2}${current_dir}
