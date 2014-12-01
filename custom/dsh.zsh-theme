@@ -9,7 +9,6 @@ local left1='$( left_prompt 1 )'
 local left2='$( left_prompt 2 )'
 local left3='$( left_prompt 3 )'
 
-
 function left_prompt() {
     local to_echo
     case $1 in
@@ -41,36 +40,6 @@ function left_prompt() {
 
     echo $LEFT_PROMPT_PREFIX$to_echo$LEFT_PROMPT_SUFFIX
 }
-
-#function left_prompt_1() {
-#    local char
-#    if [[ $+SHOW_MONKEYS == 1 ]]; then
-#        char="🙈  "
-#    else
-#        char="╓ "
-#    fi
-#    echo $LEFT_PROMPT_PREFIX$char$LEFT_PROMPT_SUFFIX
-#}
-#
-#function left_prompt_2() {
-#    local char
-#    if [[ $+SHOW_MONKEYS == 1 ]]; then
-#        char="🙉  "
-#    else
-#        char="╟"
-#    fi
-#    echo $LEFT_PROMPT_PREFIX$char$LEFT_PROMPT_SUFFIX
-#}
-#
-#function left_prompt_3() {
-#    local char
-#    if [[ $+SHOW_MONKEYS == 1 ]]; then
-#        char="🙊  "
-#    else
-#        char="╙ "
-#    fi
-#    echo $LEFT_PROMPT_PREFIX$char$LEFT_PROMPT_SUFFIX
-#}
 
 PROMPT="${left1}${user_host}${git_branch}${zsh_mode_text} ${active_port_mode_text}
 ${left2}${current_dir}
