@@ -371,7 +371,7 @@ alias pullrc=pullp
 #   Hook functions {{{1
 #-----------------------------------------------------------------------------------
 
-if [[ -x `which port` ]]; then
+if [[ -x `which port 2>/dev/null` ]]; then
     # If macports is installed, check which port selections to display relevant to the current context
     chpwd_functions=( $chpwd_functions _get_active_port_selections )
 fi
