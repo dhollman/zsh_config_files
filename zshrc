@@ -172,6 +172,8 @@ source_if_exists $ZSH_LOCAL/paths/manpath.zsh
 
 source_if_exists $ZSH_LOCAL/paths/pythonpath.zsh
 
+source_if_exists $ZSH_LOCAL/paths/modulepath.zsh
+
 # Make sure we don't add too many things to the path arrays that we're adding stuff to
 typeset -U path
 typeset -U fpath
