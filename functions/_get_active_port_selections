@@ -7,15 +7,29 @@ if [[ ! -x $port ]]; then
 fi
 
 local -aU relevant_ports
-local eval_result
+local -aU irrelevant_ports
+local -a eval_result
 
 # Traverse the file system from the current working directory looking for .port_context files
 local currentdir=$PWD
+local -a relevant_keys
+local -a irrelevant_keys
+relevant_keys=( relevant_selections relevant_select relevant relevant_ports )
+irrelevant_keys=( irrelevant irrelevant_ports )
+
 while [[ ${currentdir} != ${currentdir:h} ]]; do
     if [[ -r ${currentdir}/.port_context ]]; then
-        eval_result=`python $ZSH_REPO/helper_scripts/parse_port_context.py ${currentdir}/.port_context relevant_selections relevant_select relevant relevant_ports`
+        eval_result=( `python $ZSH_REPO/helper_scripts/parse_port_context.py ${currentdir}/.port_context $irrelevant_keys` )
         if [[ $? == 0 ]]; then
-            relevant_ports=( $relevant_ports ${=eval_result} )
+            irrelevant_ports+=( ${=eval_result} )
+        fi
+        eval_result=( `python $ZSH_REPO/helper_scripts/parse_port_context.py ${currentdir}/.port_context $relevant_keys` )
+        if [[ $? == 0 ]]; then
+            for relport in ${=eval_result}; do
+                if [[ ${irrelevant_ports[(r)$relport]} != $relport ]]; then
+                    relevant_ports+=( ${relport} )
+                fi
+            done
         fi
     fi
     currentdir=${currentdir:h}
