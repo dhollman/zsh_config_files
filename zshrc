@@ -168,16 +168,20 @@ if [[ -d $ZSH_LOCAL/chpwd_functions ]]; then
 fi
 #-------------------------------------------------}}}2#
 
-source_if_exists $ZSH_LOCAL/paths/manpath.zsh
-
-source_if_exists $ZSH_LOCAL/paths/pythonpath.zsh
+for pathfile in $ZSH_LOCAL/paths/*.zsh; do
+    . $pathfile
+done
+#source_if_exists $ZSH_LOCAL/paths/manpath.zsh
+#
+#source_if_exists $ZSH_LOCAL/paths/pythonpath.zsh
+#
+#source_if_exists $ZSH_LOCAL/paths/modulepath.zsh
 
 # Make sure we don't add too many things to the path arrays that we're adding stuff to
 typeset -U path
 typeset -U fpath
 typeset -U manpath
 typeset -U chpwd_functions
-#typeset -U PYTHONPATH
 typeset -U pythonpath
 
 
