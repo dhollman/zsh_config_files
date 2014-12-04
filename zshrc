@@ -1,9 +1,10 @@
-##########################################################
-#                                                         # 
+# vim: set filetype=zsh sw=4 ts=4 sts=4 et tw=78 foldmarker={{{,}}} foldmethod=marker nospell:
+#######################################################{{{#
+#                                                         #
 #   David Hollman's nice, clean, organized .zshrc file    #
 #   With features copied/translated from my .tcshrc file  #
 #   and a bunch of new stuff.                             #
-#                                                         # 
+#                                                         #
 #   Feel free to use anything you see and think would     #
 #   be useful.  If you find some alias or something       #
 #   useful, I'd appreciate it if you'd mention it to me   #
@@ -17,7 +18,7 @@
 #   tricks interesting, you might also want to browse     #
 #   my ~/Scripts directory.                               #
 #                                                         #
-###########################################################
+#######################################################}}}#
 
 
 #vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
@@ -257,10 +258,10 @@ if [[ -e $HOME/.pythonrc.py ]]; then
     PYTHONSTARTUP=$HOME/.pythonrc.py
 fi
 
-source_if_exists $ZSH_LOCAL/environment.zsh
-
 WORKON_HOME=$HOME/.virtualenvs
 
+# Local environment modifications take precidence
+source_if_exists $ZSH_LOCAL/environment.zsh
 
 #}}}1
 #^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -371,6 +372,7 @@ alias pullrc=pullp
 #}}}1
 #^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+
 #vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
 #   Hook functions {{{1
 #-----------------------------------------------------------------------------------
@@ -383,6 +385,7 @@ fi
 
 #}}}1
 #^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
 
 #vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
 #   Key Bindings   {{{1
