@@ -1,0 +1,38 @@
+
+local -a verbose
+zparseopts \
+    v=verbose -verbose=verbose \
+    q=quiet -quiet=quiet
+
+
+typeset -x WHERE_AM_I
+local need_modules=0
+if [[ $HOST == s979263ca* ]]; then
+    [[ $#verbose -gt 0 ]] && echo "Determined that I am on Sandia Laptop"
+    WHERE_AM_I="sandia_laptop"
+    case $HOST in
+        *.local)
+            WHERE_AM_I+="-away"
+            ;;
+    esac
+elif [[ $+NERSC_HOST == 1 ]]; then
+    [[ $#verbose -gt 0 ]] && echo "Determined that I am at NERSC"
+    WHERE_AM_I="nersc"
+    case $HOST in
+        edison*)
+            WHERE_AM_I+="-edison"
+            ;;
+        hopper*)
+            WHERE_AM_I+="-hopper"
+            ;;
+    esac
+elif [[ $HOST == "warpcore" ]]; then
+    [[ $#verbose -gt 0 ]] && echo "Determined that I am on warpcore"
+    WHERE_AM_I="warpcore"
+else
+    [[ $#verbose -gt 0 ]] && echo "I don't know where \"$HOST\" is"
+    WHERE_AM_I="unknown"
+fi
+
+[[ $#quiet -gt 0 ]] || echo $WHERE_AM_I
+

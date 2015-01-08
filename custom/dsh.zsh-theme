@@ -29,14 +29,12 @@ function left_prompt() {
     local LEFT_PROMPT_PREFIX
     local LEFT_PROMPT_SUFFIX="%{${reset_color}%}"
 
-    case $HOST in
-        (s979263ca.ca.sandia.gov|pi.local) LEFT_PROMPT_PREFIX="%{${FG[088]}%}" ;;
-        (*) LEFT_PROMPT_PREFIX="%{${FG[028]}%}" ;;
+    case $( where-am-i) in
+        (sandia_laptop*)      LEFT_PROMPT_PREFIX="%{${FG[088]}%}" ;;
+        (warpcore)            LEFT_PROMPT_PREFIX="%{${FG[017]}%}" ;;
+        (nersc*)              LEFT_PROMPT_PREFIX="%{${FG[028]}%}" ;;
+        (*)                   LEFT_PROMPT_PREFIX="%{${FG[017]}%}" ;;
     esac
-
-    if [[ $+NERSC_HOST == 1 ]]; then
-        LEFT_PROMPT_PREFIX="%{${FG[017]}%}"
-    fi
 
     echo $LEFT_PROMPT_PREFIX$to_echo$LEFT_PROMPT_SUFFIX
 }
@@ -60,3 +58,5 @@ ZSH_THEME_ACTIVE_PORT_SUFFIX[mpi]="%{$reset_color%}"
 
 ZSH_THEME_ACTIVE_PORT_PREFIX[python]="%{$FX[underline]$FG[151]%}❰"
 ZSH_THEME_ACTIVE_PORT_SUFFIX[python]="❱%{$reset_color%}"
+ZSH_THEME_ACTIVE_PORT_PREFIX[ipython]="%{$FX[underline]$FG[151]%}❰"
+ZSH_THEME_ACTIVE_PORT_SUFFIX[ipython]="❱%{$reset_color%}"

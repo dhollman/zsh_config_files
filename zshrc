@@ -257,6 +257,9 @@ autoload zargs
 if [[ -e $HOME/.pythonrc.py ]]; then
     PYTHONSTARTUP=$HOME/.pythonrc.py
 fi
+if [[ -e $HOME/.ipython ]]; then
+    IPYTHONDIR=$HOME/.ipython
+fi
 
 WORKON_HOME=$HOME/.virtualenvs
 
