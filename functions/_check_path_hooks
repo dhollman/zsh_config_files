@@ -1,0 +1,113 @@
+
+if [[ $ZSH_DEBUG_FUNCTIONS == 1 || $ZSH_DEBUG == 1 ]]; then
+    echo "Entering function _check_path_hooks"
+fi
+
+funtion TRAPEXIT () {
+  if [[ $? != 0 ]]; then
+      echo "ZSH function _check_path_hooks exited with an error"
+      return 0
+  fi
+  return 0
+}
+
+local currentdir=$PWD
+
+# Compile the list of contexts relevant to the current directory
+local -a current_contexts
+while [[ ${currentdir} != ${currentdir:h} ]]; do
+    if [[ -r ${currentdir}/.zsh_context_changed ]]; then
+        current_contexts+=( ${currentdir} )
+    fi
+    currentdir=${currentdir:h}
+done
+
+export ZSH_EXITING_CONTEXT=1
+export ZSH_ENTERING_CONTEXT=0
+
+prepend-path () {
+    local -a rem
+    rem=( $2 )
+    export $1=${(j<:>)${${${(s<:>)${(P)1}}}:|rem}}
+    if [[ $+ZSH_CONTEXT_VERBOSE == 1 ]]; then
+        echo "Removing $2 from path $1"
+    fi
+}
+
+append-path () {
+    local -a rem
+    rem=( $2 )
+    export $1=${(j<:>)${${${(s<:>)${(P)1}}}:|rem}}
+    if [[ $+ZSH_CONTEXT_VERBOSE == 1 ]]; then
+        echo "Removing $2 from path $1"
+    fi
+}
+
+local -a removed_entries
+removed_entries=${_ZSH_CONTEXTS_ENTERED:|current_contexts}
+for entry in $removed_entries; do
+    export ZSH_EXITING_DIRECTORY=$entry
+    {
+        source $entry/.zsh_context_changed
+    } always {
+        if [[ $TRY_BLOCK_ERROR == 1 ]]; then
+            echo "ERROR: $entry/.zsh_context_changed exited with an error"
+            (( TRY_BLOCK_ERROR = 0 ))
+        fi
+    }
+    export ZSH_EXITING_DIRECTORY=
+done
+
+unfunction prepend-path
+unfunction append-path
+
+local -a new_entries
+new_entries=${current_contexts:|_ZSH_CONTEXTS_ENTERED}
+
+export ZSH_ENTERING_CONTEXT=1
+export ZSH_EXITING_CONTEXT=0
+
+prepend-path () {
+    if [[ ${(P)#1} -gt 0 ]]; then
+        eval "export ${1}=${2}:${(P)1}"
+    else
+        eval "export ${1}=${2}"
+    fi
+    if [[ $+ZSH_CONTEXT_VERBOSE == 1 ]]; then
+        echo "Prepending $2 to path $1"
+    fi
+}
+
+append-path () {
+    if [[ ${(P)#1} -gt 0 ]]; then
+        eval "export ${1}=${(P)1}:${2}"
+    else
+        eval "export ${1}=${2}"
+    fi
+    if [[ $+ZSH_CONTEXT_VERBOSE == 1 ]]; then
+        echo "Appending $2 to path $1"
+    fi
+}
+
+for entry in $new_entries; do
+    export ZSH_ENTERING_DIRECTORY=$entry
+    {
+        source $entry/.zsh_context_changed
+    } always {
+        if [[ $TRY_BLOCK_ERROR == 1 ]]; then
+            echo "ERROR: $entry/.zsh_context_changed exited with an error"
+            (( TRY_BLOCK_ERROR = 0 ))
+        fi
+    }
+    export ZSH_ENTERING_DIRECTORY=
+done
+
+
+_ZSH_CONTEXTS_ENTERED=( $current_contexts )
+
+unfunction TRAPEXIT
+
+if [[ $ZSH_DEBUG_FUNCTIONS == 1 || $ZSH_DEBUG == 1 ]]; then
+    echo "Exiting function _check_path_hooks"
+fi
+

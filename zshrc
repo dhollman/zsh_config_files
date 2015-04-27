@@ -380,9 +380,16 @@ alias pullrc=pullp
 #   Hook functions {{{1
 #-----------------------------------------------------------------------------------
 
-if [[ -x `which port 2>/dev/null` ]]; then
-    # If macports is installed, check which port selections to display relevant to the current context
-    chpwd_functions=( $chpwd_functions _get_active_port_selections )
+if [[ $- == *i* ]]; then
+    if [[ -x `which port 2>/dev/null` ]]; then
+        # If macports is installed, check which port selections to display relevant to the current context
+        chpwd_functions=( $chpwd_functions _get_active_port_selections )
+    fi
+
+    chpwd_functions+=( _check_path_hooks )
+
+    typeset -ax _ZSH_CONTEXTS_ENTERED
+    typeset -ax _ZSH_ENTER_CONTEXTS_ENTERED
 fi
 
 

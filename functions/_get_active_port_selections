@@ -1,8 +1,28 @@
+
+if [[ $ZSH_DEBUG_FUNCTIONS == 1 || $ZSH_DEBUG == 1 ]]; then
+    echo "Entering function _get_active_port_selections"
+fi
+
+function __debug()
+{
+    if [[ $ZSH_DEBUG_FUNCTIONS == 1 || $ZSH_DEBUG == 1 ]]; then
+        echo $1
+    fi
+}
+
+
+funtion TRAPZERR () {
+  if [[ $ZSH_DEBUG_FUNCTIONS == 1 || $ZSH_DEBUG == 1 ]]; then
+    echo "ZSH function _get_active_port_selections exited with an error"
+  fi
+  return 0
+}
 # Get the important ports to display which are selected in the command line
 
 # Find the executable; do nothing if it doesn't exist
 local port=`which port`
 if [[ ! -x $port ]]; then
+    unfunction TRAPEXIT
     return 1
 fi
 
@@ -18,12 +38,16 @@ relevant_keys=( relevant_selections relevant_select relevant relevant_ports )
 irrelevant_keys=( irrelevant irrelevant_ports )
 
 while [[ ${currentdir} != ${currentdir:h} ]]; do
+    __debug "--- Checking ${currentdir}"
     if [[ -r ${currentdir}/.port_context ]]; then
-        eval_result=( `python $ZSH_REPO/helper_scripts/parse_port_context.py ${currentdir}/.port_context $irrelevant_keys` )
+        __debug "---   Found .port_context in ${currentdir}"
+        eval_result=( `/opt/local/bin/python $ZSH_REPO/helper_scripts/parse_port_context.py ${currentdir}/.port_context $irrelevant_keys` )
+        __debug "---   Ports to ignore: ${eval_result}"
         if [[ $? == 0 ]]; then
             irrelevant_ports+=( ${=eval_result} )
         fi
-        eval_result=( `python $ZSH_REPO/helper_scripts/parse_port_context.py ${currentdir}/.port_context $relevant_keys` )
+        eval_result=( `/opt/local/bin/python $ZSH_REPO/helper_scripts/parse_port_context.py ${currentdir}/.port_context $relevant_keys` )
+        __debug "---   Ports to include: ${eval_result}"
         if [[ $? == 0 ]]; then
             for relport in ${=eval_result}; do
                 if [[ ${irrelevant_ports[(r)$relport]} != $relport ]]; then
@@ -59,3 +83,6 @@ for rport in $relevant_ports; do
     ZSH_ACTIVE_PORT_SELECTIONS=( ${(kv)ZSH_ACTIVE_PORT_SELECTIONS} $rport $outval )
 done
 
+unfunction TRAPZERR
+__debug "Exiting function _get_active_port_selections"
+unfunction __debug
