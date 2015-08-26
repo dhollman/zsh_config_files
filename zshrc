@@ -684,9 +684,6 @@ if ((! $+DISABLE_ZSH_HIGHLIGHTING)); then
     #
 fi
 
-export SPACK_ROOT=$HOME/Packages/Spack
-source $SPACK_ROOT/share/spack/setup-env.sh
-
 # make sure we don't add too many things to arrays that we're adding stuff to
 typeset -U fpath
 typeset -U path
