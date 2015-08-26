@@ -588,6 +588,7 @@ alias viv='vi ~/.vimrc'
 alias viro='vim -R'
 alias vimro="vim -R"
 alias vs='vim -S *.vimsession'
+alias vic="vi .zsh_context_changed && _check_path_hooks"
 #-----------------------------------------}}}2#
 
 alias tfo='tail -n 1000 -f output.dat'
@@ -682,6 +683,9 @@ if ((! $+DISABLE_ZSH_HIGHLIGHTING)); then
     ZSH_HIGHLIGHT_STYLES[commandseparator]='fg=yellow,bold'
     #
 fi
+
+export SPACK_ROOT=$HOME/Packages/Spack
+source $SPACK_ROOT/share/spack/setup-env.sh
 
 # make sure we don't add too many things to arrays that we're adding stuff to
 typeset -U fpath
