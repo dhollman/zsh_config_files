@@ -1,4 +1,8 @@
 
-
-echo cp $1 ${1:r}_$(date "+%Y_%m_%d_%H_%M_%S").${1:e}
-cp $1 ${1:r}_$(date "+%Y_%m_%d_%H_%M_%S").${1:e}
+local fname
+local dot
+fname=$argv[-1]
+dot=
+[[ ${#${fname:e}} -gt 0 ]] && dot=.
+echo cp $argv[1,-2] $fname ${fname:r}_$(date "+%Y_%m_%d_%H_%M_%S")${dot}${fname:e}
+cp $argv[1,-2] $fname ${fname:r}_$(date "+%Y_%m_%d_%H_%M_%S")${dot}${fname:e}
