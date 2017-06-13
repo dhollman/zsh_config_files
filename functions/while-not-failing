@@ -1,0 +1,5 @@
+
+echo "Running $* until it fails..."
+while [[ $? == 0 ]]; do
+  $* ;
+done

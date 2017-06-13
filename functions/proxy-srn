@@ -1,0 +1,17 @@
+
+proxy_url=wwwproxy.ran.sandia.gov
+
+export http_proxy=${proxy_url}:80
+export https_proxy=${proxy_url}:80
+export ftp_proxy=${proxy_url}:80
+export rsync_proxy=${proxy_url}:80
+export HTTP_PROXY=${http_proxy}
+export HTTPS_PROXY=${https_proxy}
+export FTP_PROXY=${ftp_proxy}
+#export http_proxy=http://${proxy_url}:80
+#export https_proxy=https://${proxy_url}:80
+#export ftp_proxy=ftp://${proxy_url}:80
+#export rsync_proxy=${proxy_url}:80
+#export HTTP_PROXY=${http_proxy}
+#export HTTPS_PROXY=${https_proxy}
+#export FTP_PROXY=${ftp_proxy}

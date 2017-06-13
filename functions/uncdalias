@@ -1,0 +1,23 @@
+#!/usr/bin/env zsh
+
+if [[ ${#*} == 0 ]]; then
+    print -u2 "Need at least one argument (name for the alias to be created)"
+    return 1
+fi
+
+for name in $*; do
+    if (( $+nameddirs[$name] )); then
+        print -u2 "Removing ~$name from named directories"
+        unhash -d $name
+        sed -e "/hash -d $name=/d" -i .bak $ZSH_LOCAL/hash_directories.zsh
+        rm $ZSH_LOCAL/hash_directories.zsh.bak
+    fi
+
+    if (( $+aliases[cd$name] )); then
+        print -u2 "Removing cd$name from aliases"
+        unalias cd$name
+        sed -e "/alias cd$name=/d" -i .bak $ZSH_LOCAL/aliases.zsh
+        rm $ZSH_LOCAL/aliases.zsh.bak
+    fi
+done
+

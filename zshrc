@@ -236,7 +236,10 @@ else
     }
 fi
 #---------------------------------------}}}2#
- 
+
+#--oh-my-zsh git parser options---------{{{2#
+DISABLE_UNTRACKED_FILES_DIRTY=true
+#---------------------------------------}}}2#
 
 #}}}1
 #^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -406,6 +409,8 @@ bindkey -v
 ##
 # put ALT-. back to the way I like it
 bindkey '\e.' insert-last-word
+# Fix meta-. when meta+esc is disabled
+bindkey -M viins '\M-.' insert-last-word
 ##
 # Completion help :: useful for coming up with those completion context strings
 bindkey '^Xh' _complete_help
@@ -415,6 +420,7 @@ bindkey -M menuselect '\C-^M' accept-and-menu-complete
 ##
 # run-fg :: Forgrounds the most recent backgrounded process
 bindkey '\e' run-fg
+bindkey '\M-\C-z' run-fg
 ##
 # Fix vi's backspace to allow it to go past the insertion point
 bindkey -M viins '' backward-delete-char
@@ -467,6 +473,7 @@ bindkey -s "^[OM" ""
 bindkey -s "^[OX" "="
 bindkey "^[OH" beginning-of-line
 bindkey "^[OF" end-of-line
+
 
 #}}}1
 #^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -654,6 +661,7 @@ if [[ -d $ZSH_LOCAL/functions ]]; then
     hash -d ZSH_FUNCTIONS="$ZSH_LOCAL/functions"
 fi
 source_if_exists $ZSH_LOCAL/hash_directories.zsh
+setopt cdable_vars
 #}}}1
 #^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
