@@ -241,6 +241,10 @@ fi
 DISABLE_UNTRACKED_FILES_DIRTY=true
 #---------------------------------------}}}2#
 
+# Fix issues that could come from the prompt using unicode
+export LC_ALL=en_US.UTF-8
+export LANG=en_US.UTF-8
+
 #}}}1
 #^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
