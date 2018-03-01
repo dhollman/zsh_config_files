@@ -291,7 +291,7 @@ if (( ! $+NO_OH_MY_ZSH )); then
     if (( ! $+ZSH_THEME )); then
         export ZSH_THEME="dsh"
     fi
-    export COMPLETION_WAITING_DOTS="true"
+    export COMPLETION_WAITING_DOTS="false"
     source $ZSH/oh-my-zsh.sh
 fi
 
