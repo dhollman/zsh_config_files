@@ -167,6 +167,9 @@ if [[ -d $ZSH_LOCAL/chpwd_functions ]]; then
         autoload -U ${file:t}
     done
 fi
+if [[ -d /usr/local/share/zsh-completions ]]; then
+    fpath=(/usr/local/share/zsh-completions $fpath)
+fi
 #-------------------------------------------------}}}2#
 
 for pathfile in $ZSH_LOCAL/paths/*.zsh; do
@@ -194,20 +197,20 @@ typeset -U pythonpath
 #   Random settings   {{{1
 #-----------------------------------------------------------------------------------
 
-# Export without using the word export
+## Export without using the word export
 setopt all_export
 
 # Vim forever...
-EDITOR="/usr/bin/vim"
+export EDITOR="/usr/local/bin/vim"
 
 zstyle :compinstall filename "$HOME/.zshrc"
 
 #--History file--------------------------{{{2#
-HISTFILE=~/.histfile
+export HISTFILE=~/.histfile
 # number of lines kept in history
-HISTSIZE=10000
+export HISTSIZE=10000
 # number of lines saved in the history after logout
-SAVEHIST=10000 
+export SAVEHIST=10000 
 # No shared history
 unsetopt SHARE_HISTORY
 #-----------------------------------------}}}2#
@@ -238,7 +241,7 @@ fi
 #---------------------------------------}}}2#
 
 #--oh-my-zsh git parser options---------{{{2#
-DISABLE_UNTRACKED_FILES_DIRTY=true
+export DISABLE_UNTRACKED_FILES_DIRTY=true
 #---------------------------------------}}}2#
 
 # Fix issues that could come from the prompt using unicode
@@ -262,13 +265,13 @@ autoload zargs
 #   Environment variables that don't belong elsewhere  {{{1
 #-----------------------------------------------------------------------------------
 if [[ -e $HOME/.pythonrc.py ]]; then
-    PYTHONSTARTUP=$HOME/.pythonrc.py
+    export PYTHONSTARTUP=$HOME/.pythonrc.py
 fi
 if [[ -e $HOME/.ipython ]]; then
-    IPYTHONDIR=$HOME/.ipython
+    export IPYTHONDIR=$HOME/.ipython
 fi
 
-WORKON_HOME=$HOME/.virtualenvs
+export WORKON_HOME=$HOME/.virtualenvs
 
 # Local environment modifications take precidence
 source_if_exists $ZSH_LOCAL/environment.zsh
@@ -286,7 +289,7 @@ if (( ! $+NO_OH_MY_ZSH )); then
         source ~/.zsh/oh-my-zsh-plugins.zsh
     fi
     if (( ! $+ZSH_THEME )); then
-        ZSH_THEME="dsh"
+        export ZSH_THEME="dsh"
     fi
     export COMPLETION_WAITING_DOTS="true"
     source $ZSH/oh-my-zsh.sh
@@ -490,6 +493,7 @@ bindkey "^[OF" end-of-line
 # TODO Copy this over to repository
 #. /Users/dhollman/.zsh/completion.zsh
 
+
 # Don't fill in first option
 setopt list_ambiguous
 setopt auto_list
@@ -677,23 +681,30 @@ if [ -e $HOME/.zsh/source_last.zsh ]; then
     source $HOME/.zsh/source_last.zsh
 fi
 # zsh syntax highlighting:
+
 if ((! $+DISABLE_ZSH_HIGHLIGHTING)); then
-    ZSH_HIGHLIGHT_HIGHLIGHTERS=(main)
-    source $ZSH_REPO/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
-    # All of this stuff has to go AFTER the above statement...
-    # ZSH highlight styles
-    ZSH_HIGHLIGHT_STYLES[globbing]='fg=magenta'
-    ZSH_HIGHLIGHT_STYLES[history-expansion]='fg=magenta,bold'
-    ZSH_HIGHLIGHT_STYLES[alias]='fg=green'
-    ZSH_HIGHLIGHT_STYLES[builtin]='fg=green'
-    ZSH_HIGHLIGHT_STYLES[function]='fg=green'
-    ZSH_HIGHLIGHT_STYLES[command]='fg=green'
-    ZSH_HIGHLIGHT_STYLES[precommand]='fg=yellow,underline'
-    ZSH_HIGHLIGHT_STYLES[bracket-error]='fg=white,bold,bg=red'
-    ZSH_HIGHLIGHT_STYLES[cursor-matchingbracket]='bold,bg=white'
-    ZSH_HIGHLIGHT_STYLES[assign]='fg=yellow,bold'
-    ZSH_HIGHLIGHT_STYLES[commandseparator]='fg=yellow,bold'
-    #
+    if [[ -e /usr/local/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh ]]; then
+        # use the brew version
+        export ZSH_HIGHLIGHT_HIGHLIGHTERS_DIR=/usr/local/share/zsh-syntax-highlighting/highlighters
+        source /usr/local/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+    else
+        ZSH_HIGHLIGHT_HIGHLIGHTERS=(main)
+        source $ZSH_REPO/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+        # All of this stuff has to go AFTER the above statement...
+        # ZSH highlight styles
+        ZSH_HIGHLIGHT_STYLES[globbing]='fg=magenta'
+        ZSH_HIGHLIGHT_STYLES[history-expansion]='fg=magenta,bold'
+        ZSH_HIGHLIGHT_STYLES[alias]='fg=green'
+        ZSH_HIGHLIGHT_STYLES[builtin]='fg=green'
+        ZSH_HIGHLIGHT_STYLES[function]='fg=green'
+        ZSH_HIGHLIGHT_STYLES[command]='fg=green'
+        ZSH_HIGHLIGHT_STYLES[precommand]='fg=yellow,underline'
+        ZSH_HIGHLIGHT_STYLES[bracket-error]='fg=white,bold,bg=red'
+        ZSH_HIGHLIGHT_STYLES[cursor-matchingbracket]='bold,bg=white'
+        ZSH_HIGHLIGHT_STYLES[assign]='fg=yellow,bold'
+        ZSH_HIGHLIGHT_STYLES[commandseparator]='fg=yellow,bold'
+        #
+    fi
 fi
 
 # make sure we don't add too many things to arrays that we're adding stuff to
@@ -702,3 +713,5 @@ typeset -U path
 
 #}}}1
 #^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+unsetopt all_export

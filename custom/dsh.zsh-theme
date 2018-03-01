@@ -56,7 +56,8 @@ ZSH_THEME_ACTIVE_PORT_NAME_PRE[mpi]='"$name: "'
 ZSH_THEME_ACTIVE_PORT_PREFIX[mpi]="%{$FX[italic]$FG[105]%}➠ "
 ZSH_THEME_ACTIVE_PORT_SUFFIX[mpi]="%{$reset_color%}"
 
-ZSH_THEME_ACTIVE_PORT_PREFIX[python]="%{$FX[underline]$FG[151]%}❰"
+ZSH_THEME_ACTIVE_PORT_NAME_PRE[python]='"$name "'
+ZSH_THEME_ACTIVE_PORT_PREFIX[python]="%{$FX[underline]$FG[059]%}❰"
 ZSH_THEME_ACTIVE_PORT_SUFFIX[python]="❱%{$reset_color%}"
 ZSH_THEME_ACTIVE_PORT_PREFIX[ipython]="%{$FX[underline]$FG[151]%}❰"
 ZSH_THEME_ACTIVE_PORT_SUFFIX[ipython]="❱%{$reset_color%}"

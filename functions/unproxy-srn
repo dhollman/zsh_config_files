@@ -1,8 +1,13 @@
 
-unset http_proxy
-unset https_proxy
-unset ftp_proxy
-unset rsync_proxy
-unset HTTP_PROXY
-unset HTTPS_PROXY
-unset FTP_PROXY
+function echo_unset() {
+  echo "unset $1"
+  unset $1
+}
+
+echo_unset http_proxy
+echo_unset https_proxy
+echo_unset ftp_proxy
+echo_unset rsync_proxy
+echo_unset HTTP_PROXY
+echo_unset HTTPS_PROXY
+echo_unset FTP_PROXY

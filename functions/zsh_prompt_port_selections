@@ -2,6 +2,11 @@
 local echo_string
 local name_pre
 local name_post
+if [[ $+ZSH_ACTIVE_PORT_SELECTIONS == 0 ]]; then
+    typeset -A ZSH_ACTIVE_PORT_SELECTIONS
+fi
+# just always show this
+ZSH_ACTIVE_PORT_SELECTIONS[python]=$(python --version 2>&1 | awk '{print $2}')
 if [[ $+ZSH_ACTIVE_PORT_SELECTIONS == 1 ]]; then
     for name selected in ${(kv)ZSH_ACTIVE_PORT_SELECTIONS}; do
         if [[ "x"$selected"x" != "xnonex" ]]; then
@@ -19,7 +24,5 @@ if [[ $+ZSH_ACTIVE_PORT_SELECTIONS == 1 ]]; then
         fi
     done
     echo $echo_string
-else
-    return 1
 fi
 
