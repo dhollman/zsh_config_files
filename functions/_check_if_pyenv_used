@@ -1,0 +1,16 @@
+
+
+if [[ $ZSH_DEBUG_FUNCTIONS == 1 || $ZSH_DEBUG == 1 ]]; then
+    echo "Entering function _check_if_pyenv_used"
+fi
+
+if [[ "$1" == "*pyenv*" ]]; then
+    export _dshzsh_refresh_pyenv=1
+    if [[ $ZSH_DEBUG_FUNCTIONS == 1 || $ZSH_DEBUG == 1 ]]; then
+        echo "requesting pyenv refresh"
+    fi
+fi
+    
+if [[ $ZSH_DEBUG_FUNCTIONS == 1 || $ZSH_DEBUG == 1 ]]; then
+    echo "Exiting function _check_if_pyenv_used"
+fi

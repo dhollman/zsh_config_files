@@ -1,12 +1,34 @@
 
+if [[ $ZSH_DEBUG_FUNCTIONS == 1 || $ZSH_DEBUG == 1 ]]; then
+    echo "Entering function zsh_prompt_port_selections"
+fi
+ 
 local echo_string
 local name_pre
 local name_post
 if [[ $+ZSH_ACTIVE_PORT_SELECTIONS == 0 ]]; then
     typeset -A ZSH_ACTIVE_PORT_SELECTIONS
 fi
+
 # just always show this
-ZSH_ACTIVE_PORT_SELECTIONS[python]=$(python --version 2>&1 | awk '{print $2}')
+if [[ $_dshzsh_have_pyenv == 1 ]]; then
+    if [[ -n "$PYENV_VERSION" ]]; then
+        _dshzsh_pyenv_version_cached=$PYENV_VERSION
+    elif [[ -z "$_dshzsh_pyenv_version_cached" || $_dshzsh_refresh_pyenv == 1 ]]; then
+        export _dshzsh_pyenv_version_cached=`pyenv version-name`
+        export _dshzsh_refresh_pyenv=0 
+        if [[ $ZSH_DEBUG_PROMPT == 1 || $ZSH_DEBUG == 1 ]]; then
+            echo "Refreshed python version name; it is now '$_dshzsh_pyenv_version_cached'"
+        fi
+    else
+        if [[ $ZSH_DEBUG_PROMPT == 1 || $ZSH_DEBUG == 1 ]]; then
+            echo "Using cached python version name '$_dshzsh_pyenv_version_cached'"
+        fi
+    fi
+fi
+
+ZSH_ACTIVE_PORT_SELECTIONS[python]="$_dshzsh_pyenv_version_cached"
+
 if [[ $+ZSH_ACTIVE_PORT_SELECTIONS == 1 ]]; then
     for name selected in ${(kv)ZSH_ACTIVE_PORT_SELECTIONS}; do
         if [[ "x"$selected"x" != "xnonex" ]]; then
@@ -26,3 +48,6 @@ if [[ $+ZSH_ACTIVE_PORT_SELECTIONS == 1 ]]; then
     echo $echo_string
 fi
 
+if [[ $ZSH_DEBUG_FUNCTIONS == 1 || $ZSH_DEBUG == 1 ]]; then
+    echo "Exiting function zsh_prompt_port_selections"
+fi

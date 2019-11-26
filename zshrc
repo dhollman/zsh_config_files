@@ -186,6 +186,7 @@ typeset -U path
 typeset -U fpath
 typeset -U manpath
 typeset -U chpwd_functions
+typeset -U preexec_functions
 typeset -U pythonpath
 
 
@@ -391,12 +392,13 @@ alias pullrc=pullp
 #-----------------------------------------------------------------------------------
 
 if [[ $- == *i* ]]; then
-    if [[ -x `which port 2>/dev/null` ]]; then
-        # If macports is installed, check which port selections to display relevant to the current context
-        chpwd_functions=( $chpwd_functions _get_active_port_selections )
-    fi
-
     chpwd_functions+=( _check_path_hooks )
+    
+    if [[ -x `which zsh 2>/dev/null` ]]; then
+        export _dshzsh_have_pyenv=1
+        export _dshzsh_pyenv_version_cached=""
+        preexec_functions+=( _check_if_pyenv_used )
+    fi
 
     typeset -ax _ZSH_CONTEXTS_ENTERED
     typeset -ax _ZSH_ENTER_CONTEXTS_ENTERED

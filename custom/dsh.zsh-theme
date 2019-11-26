@@ -1,3 +1,7 @@
+if [[ $ZSH_DEBUG_PROMPT == 1 || $ZSH_DEBUG == 1 ]]; then
+    echo "Entering dsh.zsh-theme"
+fi
+
 local return_code="%(?..%{$fg[red]%}%? ↵%{$reset_color%})"
 
 local user_host='%{$terminfo[bold]$fg[green]%}%n@%m%{$reset_color%}'
@@ -61,3 +65,8 @@ ZSH_THEME_ACTIVE_PORT_PREFIX[python]="%{$FX[underline]$FG[059]%}❰"
 ZSH_THEME_ACTIVE_PORT_SUFFIX[python]="❱%{$reset_color%}"
 ZSH_THEME_ACTIVE_PORT_PREFIX[ipython]="%{$FX[underline]$FG[151]%}❰"
 ZSH_THEME_ACTIVE_PORT_SUFFIX[ipython]="❱%{$reset_color%}"
+
+if [[ $ZSH_DEBUG_PROMPT == 1 || $ZSH_DEBUG == 1 ]]; then
+    echo "Exiting dsh.zsh-theme"
+fi
+
