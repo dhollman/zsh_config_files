@@ -282,6 +282,21 @@ source_if_exists $ZSH_LOCAL/environment.zsh
 
 
 #vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
+#   Starship {{{1
+#-----------------------------------------------------------------------------------
+
+# If starship is available, use it instead of the ZSH theme
+if which starship 2>&1 >/dev/null ; then
+    eval "$(starship init zsh)"
+    DSH_USE_STARSHIP=1
+else
+    DSH_USE_STARSHIP=0
+fi
+
+#}}}1
+#^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+#vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
 #   Oh-my-zsh {{{1
 #-----------------------------------------------------------------------------------
 if (( ! $+NO_OH_MY_ZSH )); then
@@ -289,8 +304,10 @@ if (( ! $+NO_OH_MY_ZSH )); then
     if [ -e ~/.zsh/oh-my-zsh-plugins.zsh ]; then
         source ~/.zsh/oh-my-zsh-plugins.zsh
     fi
-    if (( ! $+ZSH_THEME )); then
-        export ZSH_THEME="dsh"
+    if [ $DSH_USE_STARSHIP -eq 0 ]; then
+        if (( ! $+ZSH_THEME )); then
+            export ZSH_THEME="dsh"
+        fi
     fi
     export COMPLETION_WAITING_DOTS="false"
     source $ZSH/oh-my-zsh.sh
@@ -391,17 +408,19 @@ alias pullrc=pullp
 #   Hook functions {{{1
 #-----------------------------------------------------------------------------------
 
-if [[ $- == *i* ]]; then
-    chpwd_functions+=( _check_path_hooks )
-    
-    if [[ -x `which zsh 2>/dev/null` ]]; then
-        export _dshzsh_have_pyenv=1
-        export _dshzsh_pyenv_version_cached=""
-        preexec_functions+=( _check_if_pyenv_used )
-    fi
-
-    typeset -ax _ZSH_CONTEXTS_ENTERED
-    typeset -ax _ZSH_ENTER_CONTEXTS_ENTERED
+if [ $DSH_USE_STARSHIP -eq 0 ]; then
+  if [[ $- == *i* ]]; then
+      chpwd_functions+=( _check_path_hooks )
+      
+      if [[ -x `which pyenv 2>/dev/null` ]]; then
+          export _dshzsh_have_pyenv=1
+          export _dshzsh_pyenv_version_cached=""
+          preexec_functions+=( _check_if_pyenv_used )
+      fi
+  
+      typeset -ax _ZSH_CONTEXTS_ENTERED
+      typeset -ax _ZSH_ENTER_CONTEXTS_ENTERED
+  fi
 fi
 
 
