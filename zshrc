@@ -296,6 +296,7 @@ fi
 #}}}1
 #^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+
 #vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
 #   Oh-my-zsh {{{1
 #-----------------------------------------------------------------------------------
@@ -691,6 +692,74 @@ if [[ -d $ZSH_LOCAL/functions ]]; then
 fi
 source_if_exists $ZSH_LOCAL/hash_directories.zsh
 setopt cdable_vars
+#}}}1
+#^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+
+#vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
+#   fzf {{{1
+#-----------------------------------------------------------------------------------
+
+FZF_DIR="${FZF_DIR:-${HOME}/.fzf/bin/}"
+if [ -f ~/.fzf.zsh ]; then
+    if [ -d $FZF_DIR ] || hash fzf; then
+        if hash bat 2>/dev/null; then
+            export FZF_DEFAULT_OPTS="--height 40% --reverse --ansi --preview-window 'right:60%' --preview 'bat --color=always --style=header,grid --line-range :300 {}'"
+        else
+            export FZF_DEFAULT_OPTS="--height 40% --reverse --ansi --preview-window 'right:60%'"
+        fi
+
+        # Here's how to do ripgrep integration, if I ever feel like doing that
+        # if hash rg 2>/dev/null; then
+        #     export FZF_DEFAULT_COMMAND='rg --files --no-ignore --hidden -g "!{.git,node_modules}/*" 2> /dev/null'
+        # fi
+        
+        export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
+        # If current selection is a text file shows its content,
+        # if it's a directory shows its content, the rest is ignored
+        export FZF_CTRL_T_OPTS="--select-1 --exit-0 --no-height --preview-window wrap --preview '
+        if [[ -f {} ]]; then
+            file --mime {} | grep -q \"text\/.*;\" && bat --color \"always\" {} || (tput setaf 1; file --mime {})
+        elif [[ -d {} ]]; then
+            ls {}
+        else;
+            tput setaf 1; echo Something went wrong!
+        fi'"
+
+        # exa --long --color=always {}
+
+        export FZF_CTRL_T_OPTS="--select-1 --exit-0"
+
+        # if hash bfs 2>/dev/null; then
+        #     export FZF_ALT_C_COMMAND="bfs . -type d -nohidden 2> /dev/null"
+        # fi
+
+        # export FZF_ALT_C_OPTS="--preview 'exa --tree --color=always {} | head -200'"
+
+        source ~/.fzf.zsh
+        DSH_USE_FZF=1
+    else
+        DSH_USE_FZF=0
+    fi
+else
+    DSH_USE_FZF=0
+fi
+
+#}}}1
+#^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+
+#vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
+#   iterm2 integration {{{1
+#-----------------------------------------------------------------------------------
+
+if [ -f ~/.iterm2_shell_integration.zsh ] ; then
+    source ~/.iterm2_shell_integration.zsh
+    DSH_USE_ITERM2_SHELL_INTEGRATION=1
+else
+    DSH_USE_ITERM2_SHELL_INTEGRATION=0
+fi
+
 #}}}1
 #^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
