@@ -2,6 +2,7 @@
 local -A opts
 
 # initialize the submodules
+cd ${0:A:h}
 git submodule init
 git submodule update
 
