@@ -25,7 +25,9 @@
 #   Stuff that should be at the beginning of the zsh file   {{{1
 #-----------------------------------------------------------------------------------
 
-
+if [[ $DSH_VERBOSE_STARTUP -eq 1 ]]; then
+    set -x
+fi
 
 #--Functions to be used later in this file------{{{2#
 # Create a quick function for sourcing stuff only if it exists 
@@ -305,7 +307,7 @@ if (( ! $+NO_OH_MY_ZSH )); then
     if [ -e ~/.zsh/oh-my-zsh-plugins.zsh ]; then
         source ~/.zsh/oh-my-zsh-plugins.zsh
     fi
-    if [ $DSH_USE_STARSHIP -eq 0 ]; then
+    if [[ $DSH_USE_STARSHIP -eq 0 ]]; then
         if (( ! $+ZSH_THEME )); then
             export ZSH_THEME="dsh"
         fi
@@ -373,7 +375,7 @@ function mvp ()
 #---------------------------------------}}}2#
 
 
-# Push changes to zshrc and such
+#--Push changes to zshrc and such{{{2#
 pushp() {
     current_dir=`pwd`
     cd $ZSH_REPO
@@ -397,9 +399,14 @@ pullp() {
     cd $current_dir
 }
 alias pullrc=pullp
+#---------------------------------------}}}2#
 
 #TODO syncp
 
+#--make a directory and go there{{{2#
+mkcd() {
+    mkdir -p "$1" && cd "$1"
+}
 
 #}}}1
 #^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
