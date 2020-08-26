@@ -407,6 +407,30 @@ alias pullrc=pullp
 mkcd() {
     mkdir -p "$1" && cd "$1"
 }
+#---------------------------------------}}}2#
+
+#--Check for cmake default cache before running---{{{2#
+
+cmake() {
+    local my_pwd=$PWD
+    local build_type_string=${my_pwd:A:t}
+    local cmake_args
+    local tryname
+    local defaults_dir=$HOME/.cmake/defaults
+    for n ({${#${(s/-/)build_type_string}}..0}); do
+        tryname="${${(j:_:)${(@s/_/)build_type_string}[1,$n]}:-defaults}"
+        if [[ -e $defaults_dir/$tryname.cmake ]]; then
+            cmake_args="-C $defaults_dir/$tryname.cmake"
+            break
+        else 
+            echo "Note: no cache initialization script found for configuration $tryname"
+        fi
+    done
+    echo "Note: running command: cmake $cmake_args $@"
+    command cmake $cmake_args "$@"
+}
+
+#-------------------------------------------------}}}2#
 
 #}}}1
 #^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
