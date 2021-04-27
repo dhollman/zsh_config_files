@@ -44,7 +44,6 @@ safe_unalias() {
 }
 
 #-----------------------------------------------}}}2#
-    
 
 # Check if the ZSH_LOCAL variable is set.  If not, set it to $HOME/.zsh
 if ((! $+ZSH_LOCAL)); then
@@ -279,6 +278,8 @@ export WORKON_HOME=$HOME/.virtualenvs
 # Local environment modifications take precidence
 source_if_exists $ZSH_LOCAL/environment.zsh
 
+source_if_exists $HOME/.cargo/env
+
 #}}}1
 #^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
@@ -288,11 +289,10 @@ source_if_exists $ZSH_LOCAL/environment.zsh
 #-----------------------------------------------------------------------------------
 
 # If starship is available, use it instead of the ZSH theme
-if which starship 2>&1 >/dev/null ; then
-    eval "$(starship init zsh)"
-    DSH_USE_STARSHIP=1
+if starship init zsh 2>&1 >/dev/null ; then
+    export DSH_USE_STARSHIP=1
 else
-    DSH_USE_STARSHIP=0
+    export DSH_USE_STARSHIP=0
 fi
 
 #}}}1
@@ -826,6 +826,10 @@ if ((! $+DISABLE_ZSH_HIGHLIGHTING)); then
         ZSH_HIGHLIGHT_STYLES[commandseparator]='fg=yellow,bold'
         #
     fi
+fi
+
+if [[ $DSH_USE_STARSHIP -eq 1 ]]; then
+    eval "$(starship init zsh)"
 fi
 
 # make sure we don't add too many things to arrays that we're adding stuff to
