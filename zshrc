@@ -1,7 +1,7 @@
-# vim: set filetype=zsh sw=4 ts=4 sts=4 et tw=78 foldmarker={{{,}}} foldmethod=marker nospell:
+# vim: set filetype=zsh sw=4 ts=4 sts=4 et tw=78 foldmethod=marker foldmarker={{{,}}} nospell:
 #######################################################{{{#
 #                                                         #
-#   David Hollman's nice, clean, organized .zshrc file    #
+#   Daisy Hollman's nice, clean, organized .zshrc file    #
 #   With features copied/translated from my .tcshrc file  #
 #   and a bunch of new stuff.                             #
 #                                                         #
@@ -622,8 +622,9 @@ fi
 zstyle ':completion:*:complete:*' matcher-list 'm:{a-z}={A-Z} m:[-._]=[-._]'
 
 
-#zmodload -a colors
-#zmodload -a autocomplete
+zmodload -a colors
+zmodload -a autocomplete
+
 # Group matches and Describe
 zstyle ':completion:*:matches' group 'yes'
 zstyle ':completion:*:options' description 'yes'
@@ -631,9 +632,10 @@ zstyle ':completion:*:options' auto-description '%d'
 zstyle ':completion:*:descriptions' format $'\e[01;33m -- %d --\e[0m'
 zstyle ':completion:*:messages' format $'\e[01;35m -- %d --\e[0m'
 zstyle ':completion:*:warnings' format $'\e[01;31m -- No Matches Found --\e[0m'
-#zstyle ':completion:*:*:kill:*' menu yes select
-#zstyle ':completion:*:processes' command 'ps -au$USER'
-#zstyle ':completion:*:default' list-colors yes
+zstyle ':completion:*:*:kill:*' menu yes select
+zstyle ':completion:*:processes' command 'ps -au$USER'
+zstyle ':completion:*:default' list-colors yes
+
 #}}}1
 #^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
@@ -734,20 +736,23 @@ setopt cdable_vars
 FZF_DIR="${FZF_DIR:-${HOME}/.fzf/bin/}"
 if [ -f ~/.fzf.zsh ]; then
     if [ -d $FZF_DIR ] || hash fzf; then
-        if hash bat 2>/dev/null; then
-            export FZF_DEFAULT_OPTS="--height 40% --reverse --ansi --preview-window 'right:60%' --preview 'bat --color=always --style=header,grid --line-range :300 {}'"
-        else
-            export FZF_DEFAULT_OPTS="--height 40% --reverse --ansi --preview-window 'right:60%'"
+	# TODO figure out what to do with the preview window by default for the CTRL_R command
+        export FZF_DEFAULT_OPTS="--height 40% --reverse --ansi --preview-window 'right:60%'"
+        #if hash bat 2>/dev/null; then
+        #    export FZF_DEFAULT_OPTS="--height 40% --reverse --ansi --preview-window 'right:60%' --preview 'bat --color=always --style=header,grid --line-range :300 {}'"
+	#fi
+
+        if hash rg 2>/dev/null; then
+            export FZF_DEFAULT_COMMAND='rg --files --no-ignore --hidden -g "!{.git,node_modules}/*" 2> /dev/null'
         fi
 
-        # Here's how to do ripgrep integration, if I ever feel like doing that
-        # if hash rg 2>/dev/null; then
-        #     export FZF_DEFAULT_COMMAND='rg --files --no-ignore --hidden -g "!{.git,node_modules}/*" 2> /dev/null'
-        # fi
-        
         export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
+
         # If current selection is a text file shows its content,
         # if it's a directory shows its content, the rest is ignored
+	# Jane's original first line:
+	# TODO @fzf figure out what I want to do for Ctrl-T behavior
+        #export FZF_CTRL_T_OPTS="--select-1 --exit-0 --height 40% --ansi --preview-window 'right:60%' --preview '
         export FZF_CTRL_T_OPTS="--select-1 --exit-0 --no-height --preview-window wrap --preview '
         if [[ -f {} ]]; then
             file --mime {} | grep -q \"text\/.*;\" && bat --color \"always\" {} || (tput setaf 1; file --mime {})
@@ -757,9 +762,8 @@ if [ -f ~/.fzf.zsh ]; then
             tput setaf 1; echo Something went wrong!
         fi'"
 
+	# TODO setup exa, maybe?
         # exa --long --color=always {}
-
-        export FZF_CTRL_T_OPTS="--select-1 --exit-0"
 
         # if hash bfs 2>/dev/null; then
         #     export FZF_ALT_C_COMMAND="bfs . -type d -nohidden 2> /dev/null"
@@ -801,8 +805,12 @@ fi
 if [ -e $HOME/.zsh/source_last.zsh ]; then
     source $HOME/.zsh/source_last.zsh
 fi
-# zsh syntax highlighting:
 
+source_if_exists $ZSH_LOCAL/google_related.zsh
+source_if_exists /usr/share/zsh-autosuggestions/zsh-autosuggestions.zsh
+
+# TODO replace this with fast syntax highlighting
+# zsh syntax highlighting:
 if ((! $+DISABLE_ZSH_HIGHLIGHTING)); then
     if [[ -e /usr/local/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh ]]; then
         # use the brew version
